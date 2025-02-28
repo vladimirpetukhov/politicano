@@ -12,6 +12,12 @@ export const routes: Routes = [
     ]
   },
   {
+    path: 'authors',
+    children: [
+      { path: ':id', loadComponent: () => import('./pages/authors/author-profile/author-profile.component').then(m => m.AuthorProfileComponent) }
+    ]
+  },
+  {
     path: 'auth',
     children: [
       { path: 'login', loadComponent: () => import('./pages/auth/login/login.component').then(m => m.LoginComponent) },
