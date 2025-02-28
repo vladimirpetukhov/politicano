@@ -1,0 +1,503 @@
+-security-issues-1489d950874a for more information.
+Application bundle generation failed. [14.181 seconds]
+X [ERROR] TS2307: Cannot find module '@ng-bootstrap/ng-bootstrap' or its corresponding type declarations. [plugin angular-compiler]
+
+    src/app/app.config.ts:7:26:
+      7 │ import { NgbModule } from '@ng-bootstrap/ng-bootstrap';
+        ╵                           ~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+
+X [ERROR] Could not resolve "./pages/articles/article-detail/article-detail.component"
+
+    src/app/app.routes.ts:8:36:
+      8 │ ... => import('./pages/articles/article-detail/article-detail.compo...
+        ╵               ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+
+X [ERROR] TS2307: Cannot find module './pages/articles/article-detail/article-detail.component' or its corresponding type declarations. [plugin angular-compiler]
+
+    src/app/app.routes.ts:11:32:
+      11 │ ...=> import('./pages/articles/article-detail/article-detail.compo...
+         ╵              ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+
+X [ERROR] Could not resolve "./pages/articles/category-articles/category-articles.component"
+
+    src/app/app.routes.ts:12:36:
+      12 │ ...=> import('./pages/articles/category-articles/category-articles...
+         ╵              ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+
+X [ERROR] TS2307: Cannot find module './pages/articles/category-articles/category-articles.component' or its corresponding type declarations. [plugin angular-compiler]
+
+    src/app/app.routes.ts:15:32:
+      15 │ ...=> import('./pages/articles/category-articles/category-articles...
+         ╵              ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+
+X [ERROR] Could not resolve "./pages/articles/author-articles/author-articles.component"
+
+    src/app/app.routes.ts:16:36:
+      16 │ ...=> import('./pages/articles/author-articles/author-articles.com...
+         ╵              ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+
+X [ERROR] TS2307: Cannot find module './pages/articles/author-articles/author-articles.component' or its corresponding type declarations. [plugin angular-compiler]
+
+    src/app/app.routes.ts:19:32:
+      19 │ ...=> import('./pages/articles/author-articles/author-articles.com...
+         ╵              ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+
+X [ERROR] Could not resolve "./pages/auth/login/login.component"
+
+    src/app/app.routes.ts:20:36:
+      20 │ ... () => import('./pages/auth/login/login.component').then(m => m...
+         ╵                  ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+
+X [ERROR] TS2307: Cannot find module './pages/auth/login/login.component' or its corresponding type declarations. [plugin angular-compiler]
+
+    src/app/app.routes.ts:23:32:
+      23 │ ... () => import('./pages/auth/login/login.component').then(m => m...
+         ╵                  ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+
+X [ERROR] Could not resolve "./pages/auth/register/register.component"
+
+    src/app/app.routes.ts:24:36:
+      24 │ ... => import('./pages/auth/register/register.component').then(m =...
+         ╵               ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+
+X [ERROR] TS2307: Cannot find module './pages/auth/register/register.component' or its corresponding type declarations. [plugin angular-compiler]
+
+    src/app/app.routes.ts:27:32:
+      27 │ ... => import('./pages/auth/register/register.component').then(m =...
+         ╵               ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+
+X [ERROR] Could not resolve "./pages/admin/admin-dashboard/admin-dashboard.component"
+
+    src/app/app.routes.ts:28:36:
+      28 │ ...=> import('./pages/admin/admin-dashboard/admin-dashboard.compon...
+         ╵              ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+
+X [ERROR] TS2307: Cannot find module './pages/admin/admin-dashboard/admin-dashboard.component' or its corresponding type declarations. [plugin angular-compiler]
+
+    src/app/app.routes.ts:31:32:
+      31 │ ...=> import('./pages/admin/admin-dashboard/admin-dashboard.compon...
+         ╵              ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+
+X [ERROR] TS2307: Cannot find module './pages/admin/admin-dashboard/admin-dashboard.component' or its corresponding type declarations. [plugin angular-compiler]
+
+    src/app/app.routes.ts:40:36:
+      40 │ ...=> import('./pages/admin/admin-dashboard/admin-dashboard.compon...
+         ╵              ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+
+X [ERROR] Could not resolve "./pages/admin/article-list/article-list.component"
+
+    src/app/app.routes.ts:41:44:
+      41 │ ...=> import('./pages/admin/article-list/article-list.component')....
+         ╵              ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+
+X [ERROR] TS2307: Cannot find module './pages/admin/article-list/article-list.component' or its corresponding type declarations. [plugin angular-compiler]
+
+    src/app/app.routes.ts:44:36:
+      44 │ ...=> import('./pages/admin/article-list/article-list.component')....
+         ╵              ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+
+X [ERROR] Could not resolve "./pages/admin/article-editor/article-editor.component"
+
+    src/app/app.routes.ts:45:44:
+      45 │ ...=> import('./pages/admin/article-editor/article-editor.componen...
+         ╵              ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+
+X [ERROR] TS2307: Cannot find module './pages/admin/article-editor/article-editor.component' or its corresponding type declarations.
+ [plugin angular-compiler]
+
+    src/app/app.routes.ts:48:36:
+      48 │ ...=> import('./pages/admin/article-editor/article-editor.componen...
+         ╵              ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+
+X [ERROR] TS2307: Cannot find module './pages/admin/article-editor/article-editor.component' or its corresponding type declarations.
+ [plugin angular-compiler]
+
+    src/app/app.routes.ts:52:36:
+      52 │ ...=> import('./pages/admin/article-editor/article-editor.componen...
+         ╵              ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+
+X [ERROR] Could not resolve "./pages/admin/user-management/user-management.component"
+
+    src/app/app.routes.ts:53:44:
+      53 │ ...=> import('./pages/admin/user-management/user-management.compon...
+         ╵              ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+
+X [ERROR] TS2307: Cannot find module './pages/admin/user-management/user-management.component' or its corresponding type declarations. [plugin angular-compiler]
+
+    src/app/app.routes.ts:56:36:
+      56 │ ...=> import('./pages/admin/user-management/user-management.compon...
+         ╵              ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+
+X [ERROR] Could not resolve "./pages/user/profile/profile.component"
+
+    src/app/app.routes.ts:57:44:
+      57 │ ...) => import('./pages/user/profile/profile.component').then(m =>...
+         ╵                ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+
+X [ERROR] TS2307: Cannot find module './pages/user/profile/profile.component' or its corresponding type declarations. [plugin angular-compiler]
+
+    src/app/app.routes.ts:60:36:
+      60 │ ...) => import('./pages/user/profile/profile.component').then(m =>...
+         ╵                ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+
+X [ERROR] TS2307: Cannot find module './pages/user/profile/profile.component' or its corresponding type declarations. [plugin angular-compiler]
+
+    src/app/app.routes.ts:66:32:
+      66 │ ...) => import('./pages/user/profile/profile.component').then(m =>...
+         ╵                ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+
+X [ERROR] TS2300: Duplicate identifier 'User'. [plugin angular-compiler]
+
+    src/app/models/article.model.ts:2:9:
+      2 │ import { User } from './user.model';
+        ╵          ~~~~
+
+
+X [ERROR] TS2395: Individual declarations in merged declaration 'Category' must be all exported or all local. [plugin angular-compiler]
+
+    src/app/models/article.model.ts:4:13:
+      4 │ export class Category {
+        ╵              ~~~~~~~~
+
+
+X [ERROR] TS2300: Duplicate identifier 'Article'. [plugin angular-compiler]
+
+    src/app/models/article.model.ts:16:13:
+      16 │ export class Article {
+         ╵              ~~~~~~~
+
+
+X [ERROR] Multiple exports with the same name "Article"
+
+    src/app/models/article.model.ts:36:13:
+      36 │ export class Article {
+         ╵              ~~~~~~~
+
+  The name "Article" was originally exported here:
+
+    src/app/models/article.model.ts:8:13:
+      8 │ export class Article {
+        ╵              ~~~~~~~
+
+
+X [ERROR] The symbol "Article" has already been declared
+
+    src/app/models/article.model.ts:36:13:
+      36 │ export class Article {
+         ╵              ~~~~~~~
+
+  The symbol "Article" was originally declared here:
+
+    src/app/models/article.model.ts:8:13:
+      8 │ export class Article {
+        ╵              ~~~~~~~
+
+
+X [ERROR] TS2300: Duplicate identifier 'User'. [plugin angular-compiler]
+
+    src/app/models/article.model.ts:67:9:
+      67 │ import { User } from './user.model';
+         ╵          ~~~~
+
+
+X [ERROR] TS2395: Individual declarations in merged declaration 'Category' must be all exported or all local. [plugin angular-compiler]
+
+    src/app/models/article.model.ts:68:9:
+      68 │ import { Category } from './category.model';
+         ╵          ~~~~~~~~
+
+
+X [ERROR] TS2440: Import declaration conflicts with local declaration of 'Category'. [plugin angular-compiler]
+
+    src/app/models/article.model.ts:68:9:
+      68 │ import { Category } from './category.model';
+         ╵          ~~~~~~~~
+
+
+X [ERROR] TS2300: Duplicate identifier 'Article'. [plugin angular-compiler]
+
+    src/app/models/article.model.ts:70:13:
+      70 │ export class Article {
+         ╵              ~~~~~~~
+
+
+X [ERROR] TS2322: Type '"" | { [key: string]: string; }' is not assignable to type 'string'.
+  Type '{ [key: string]: string; }' is not assignable to type 'string'. [plugin angular-compiler]
+
+    src/app/models/article.model.ts:88:4:
+      88 │     this.title = data.title || '';
+         ╵     ~~~~~~~~~~
+
+
+X [ERROR] TS2339: Property 'slug' does not exist on type 'Partial<Article>'. [plugin angular-compiler]
+
+    src/app/models/article.model.ts:89:21:
+      89 │     this.slug = data.slug || '';
+         ╵                      ~~~~
+
+
+X [ERROR] TS2322: Type '"" | { [key: string]: string; }' is not assignable to type 'string'.
+  Type '{ [key: string]: string; }' is not assignable to type 'string'. [plugin angular-compiler]
+
+    src/app/models/article.model.ts:90:4:
+      90 │     this.content = data.content || '';
+         ╵     ~~~~~~~~~~~~
+
+
+X [ERROR] TS2339: Property 'excerpt' does not exist on type 'Partial<Article>'. [plugin angular-compiler]
+
+    src/app/models/article.model.ts:91:24:
+      91 │     this.excerpt = data.excerpt || '';
+         ╵                         ~~~~~~~
+
+
+X [ERROR] TS2339: Property 'featuredImage' does not exist on type 'Partial<Article>'. [plugin angular-compiler]
+
+    src/app/models/article.model.ts:94:30:
+      94 │     this.featuredImage = data.featuredImage;
+         ╵                               ~~~~~~~~~~~~~
+
+
+X [ERROR] TS2339: Property 'viewCount' does not exist on type 'Partial<Article>'. [plugin angular-compiler]
+
+    src/app/models/article.model.ts:96:26:
+      96 │     this.viewCount = data.viewCount || 0;
+         ╵                           ~~~~~~~~~
+
+
+X [ERROR] TS2339: Property 'isPublished' does not exist on type 'Partial<Article>'. [plugin angular-compiler]
+
+    src/app/models/article.model.ts:97:28:
+      97 │     this.isPublished = data.isPublished ?? false;
+         ╵                             ~~~~~~~~~~~
+
+
+X [ERROR] TS2339: Property 'publishedAt' does not exist on type 'Partial<Article>'. [plugin angular-compiler]
+
+    src/app/models/article.model.ts:98:28:
+      98 │     this.publishedAt = data.publishedAt;
+         ╵                             ~~~~~~~~~~~
+
+
+X [ERROR] NG9: Property 'imageUrl' does not exist on type 'Article'. [plugin angular-compiler]
+
+    src/app/pages/home/home.component.html:25:27:
+      25 │             [src]="article.imageUrl || 'assets/images/placeholder....
+         ╵                            ~~~~~~~~
+
+  Error occurs in the template of component HomeComponent.
+
+    src/app/pages/home/home.component.ts:12:15:
+      12 │   templateUrl: './home.component.html',
+         ╵                ~~~~~~~~~~~~~~~~~~~~~~~
+
+
+X [ERROR] NG9: Property 'description' does not exist on type 'Article'. [plugin angular-compiler]
+
+    src/app/pages/home/home.component.html:30:44:
+      30 │ ...p class="card-text">{{ article.description | slice:0:100 }}...</p>
+         ╵                                   ~~~~~~~~~~~
+
+  Error occurs in the template of component HomeComponent.
+
+    src/app/pages/home/home.component.ts:12:15:
+      12 │   templateUrl: './home.component.html',
+         ╵                ~~~~~~~~~~~~~~~~~~~~~~~
+
+
+X [ERROR] NG9: Property 'navigateToCategory' does not exist on type 'HomeComponent'. [plugin angular-compiler]
+
+    src/app/pages/home/home.component.html:47:42:
+      47 │ ...div class="category-item" (click)="navigateToCategory('angular')">
+         ╵                                       ~~~~~~~~~~~~~~~~~~
+
+  Error occurs in the template of component HomeComponent.
+
+    src/app/pages/home/home.component.ts:12:15:
+      12 │   templateUrl: './home.component.html',
+         ╵                ~~~~~~~~~~~~~~~~~~~~~~~
+
+
+X [ERROR] NG9: Property 'navigateToCategory' does not exist on type 'HomeComponent'. [plugin angular-compiler]
+
+    src/app/pages/home/home.component.html:53:42:
+      53 │ ... <div class="category-item" (click)="navigateToCategory('react')">
+         ╵                                         ~~~~~~~~~~~~~~~~~~
+
+  Error occurs in the template of component HomeComponent.
+
+    src/app/pages/home/home.component.ts:12:15:
+      12 │   templateUrl: './home.component.html',
+         ╵                ~~~~~~~~~~~~~~~~~~~~~~~
+
+
+X [ERROR] NG9: Property 'navigateToCategory' does not exist on type 'HomeComponent'. [plugin angular-compiler]
+
+    src/app/pages/home/home.component.html:59:42:
+      59 │       <div class="category-item" (click)="navigateToCategory('vue')">
+         ╵                                           ~~~~~~~~~~~~~~~~~~
+
+  Error occurs in the template of component HomeComponent.
+
+    src/app/pages/home/home.component.ts:12:15:
+      12 │   templateUrl: './home.component.html',
+         ╵                ~~~~~~~~~~~~~~~~~~~~~~~
+
+
+X [ERROR] NG9: Property 'navigateToCategory' does not exist on type 'HomeComponent'. [plugin angular-compiler]
+
+    src/app/pages/home/home.component.html:65:42:
+      65 │ ...  <div class="category-item" (click)="navigateToCategory('node')">
+         ╵                                          ~~~~~~~~~~~~~~~~~~
+
+  Error occurs in the template of component HomeComponent.
+
+    src/app/pages/home/home.component.ts:12:15:
+      12 │   templateUrl: './home.component.html',
+         ╵                ~~~~~~~~~~~~~~~~~~~~~~~
+
+
+X [ERROR] NG9: Property 'description' does not exist on type 'Article'. [plugin angular-compiler]
+
+    src/app/pages/home/home.component.html:83:44:
+      83 │ ...p class="card-text">{{ article.description | slice:0:100 }}...</p>
+         ╵                                   ~~~~~~~~~~~
+
+  Error occurs in the template of component HomeComponent.
+
+    src/app/pages/home/home.component.ts:12:15:
+      12 │   templateUrl: './home.component.html',
+         ╵                ~~~~~~~~~~~~~~~~~~~~~~~
+
+
+X [ERROR] TS2339: Property 'getLatestArticles' does not exist on type 'ArticleService'. [plugin angular-compiler]
+
+    src/app/pages/home/home.component.ts:31:24:
+      31 │     this.articleService.getLatestArticles(8).subscribe(
+         ╵                         ~~~~~~~~~~~~~~~~~
+
+
+X [ERROR] TS7006: Parameter 'articles' implicitly has an 'any' type. [plugin angular-compiler]
+
+    src/app/pages/home/home.component.ts:32:6:
+      32 │       articles => this.latestArticles = articles
+         ╵       ~~~~~~~~
+
+
+X [ERROR] TS2551: Property 'getMostReadArticles' does not exist on type 'ArticleService'. Did you mean 'getMostLikedArticles'? [plugin angular-compiler]
+
+    src/app/pages/home/home.component.ts:37:24:
+      37 │     this.articleService.getMostReadArticles().subscribe(
+         ╵                         ~~~~~~~~~~~~~~~~~~~
+
+  'getMostLikedArticles' is declared here.
+
+    src/app/services/article.service.ts:131:2:
+      131 │   getMostLikedArticles(count: number = 4): Observable<Article[]> {
+          ╵   ~~~~~~~~~~~~~~~~~~~~
+
+
+X [ERROR] TS7006: Parameter 'articles' implicitly has an 'any' type. [plugin angular-compiler]
+
+    src/app/pages/home/home.component.ts:38:6:
+      38 │       articles => this.mostReadArticles = articles
+         ╵       ~~~~~~~~
+
+
+X [ERROR] TS2551: Property 'getMostDiscussedArticles' does not exist on type 'ArticleService'. Did you mean 'getMostLikedArticles'? [plugin angular-compiler]
+
+    src/app/pages/home/home.component.ts:43:24:
+      43 │     this.articleService.getMostDiscussedArticles().subscribe(
+         ╵                         ~~~~~~~~~~~~~~~~~~~~~~~~
+
+  'getMostLikedArticles' is declared here.
+
+    src/app/services/article.service.ts:131:2:
+      131 │   getMostLikedArticles(count: number = 4): Observable<Article[]> {
+          ╵   ~~~~~~~~~~~~~~~~~~~~
+
+
+X [ERROR] TS7006: Parameter 'articles' implicitly has an 'any' type. [plugin angular-compiler]
+
+    src/app/pages/home/home.component.ts:44:6:
+      44 │       articles => this.mostDiscussedArticles = articles
+         ╵       ~~~~~~~~
+
+
+X [ERROR] Could not resolve "node_modules/bootstrap/dist/css/bootstrap.min.css"
+
+    angular:styles/global:styles:1:8:
+      1 │ @import 'node_modules/bootstrap/dist/css/bootstrap.min.css';
+        ╵         ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+  You can mark the path "node_modules/bootstrap/dist/css/bootstrap.min.css" as external to exclude it from the bundle, which will remove this error and leave the unresolved path in the bundle.
+
+
+X [ERROR] Could not resolve "node_modules/@fortawesome/fontawesome-free/css/all.min.css"
+
+    angular:styles/global:styles:2:8:
+      2 │ @import 'node_modules/@fortawesome/fontawesome-free/css/all.min.css';
+        ╵         ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+  You can mark the path "node_modules/@fortawesome/fontawesome-free/css/all.min.css" as external to exclude it from the bundle, which will remove this error and leave the unresolved path in the bundle.
+
+
+X [ERROR] Could not resolve "@ng-bootstrap/ng-bootstrap"
+
+    src/app/app.config.ts:6:26:
+      6 │ import { NgbModule } from '@ng-bootstrap/ng-bootstrap';
+        ╵                           ~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+  You can mark the path "@ng-bootstrap/ng-bootstrap" as external to exclude it from the bundle, which will remove this error and leave the unresolved path in the bundle.
+
+
+X [ERROR] Could not resolve "./pages/articles/article-detail/article-detail.component"
+
+    src/app/app.routes.ts:8:36:
+      8 │ ... => import('./pages/articles/article-detail/article-detail.compo...
+        ╵               ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+
+X [ERROR] Could not resolve "./pages/articles/category-articles/category-articles.component"
+
+    src/app/app.routes.ts:12:36:
+      12 │ ...=> import('./pages/articles/category-articles/category-articles...
+         ╵              ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+
+X [ERROR] Could not resolve "./pages/articles/author-articles/author-articles.component"
+
+    src/app/app.routes.ts:16:36:
+      16 │ ...=> import('./pages/articles/author-articles/author-articles.com...
+         ╵              ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+
+X [ERROR] Could not resolve "./pages/auth/login/login.component"
+
+    src/app/app.routes.ts:20:36:
+      20 │ ... () => import('./pages/auth/login/login.component').then(m => m...
+         ╵                  ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
