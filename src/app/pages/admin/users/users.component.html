@@ -1,0 +1,108 @@
+
+<div class="container-fluid py-4">
+  <div class="d-flex justify-content-between align-items-center mb-4">
+    <h2>Users Management</h2>
+    <button class="btn btn-primary" (click)="addUser()">
+      <i class="bi bi-plus-circle"></i> Add New User
+    </button>
+  </div>
+
+  <!-- User form -->
+  <div class="card mb-4" *ngIf="userForm">
+    <div class="card-header bg-light">
+      <h5 class="mb-0">{{ formMode === 'add' ? 'Add New User' : 'Edit User' }}</h5>
+    </div>
+    <div class="card-body">
+      <form (ngSubmit)="saveUser()">
+        <div class="row mb-3">
+          <div class="col-md-6">
+            <label for="username" class="form-label">Username</label>
+            <input type="text" class="form-control" id="username" name="username" [(ngModel)]="userForm.username" required>
+          </div>
+          <div class="col-md-6">
+            <label for="email" class="form-label">Email</label>
+            <input type="email" class="form-control" id="email" name="email" [(ngModel)]="userForm.email" required>
+          </div>
+        </div>
+        <div class="row mb-3">
+          <div class="col-md-6">
+            <label for="password" class="form-label">Password</label>
+            <input type="password" class="form-control" id="password" name="password" [(ngModel)]="userForm.password" [required]="formMode === 'add'">
+            <small class="text-muted" *ngIf="formMode === 'edit'">Leave blank to keep current password</small>
+          </div>
+          <div class="col-md-6">
+            <label for="role" class="form-label">Role</label>
+            <select class="form-select" id="role" name="role" [(ngModel)]="userForm.role" required>
+              <option [value]="UserRole.User">User</option>
+              <option [value]="UserRole.Admin">Admin</option>
+              <option [value]="UserRole.SuperAdmin">Super Admin</option>
+            </select>
+          </div>
+        </div>
+        <div class="mb-3">
+          <label for="bio" class="form-label">Bio</label>
+          <textarea class="form-control" id="bio" name="bio" rows="3" [(ngModel)]="userForm.bio"></textarea>
+        </div>
+        <div class="d-flex gap-2">
+          <button type="submit" class="btn btn-success">
+            <i class="bi bi-check-circle"></i> Save
+          </button>
+          <button type="button" class="btn btn-secondary" (click)="resetForm()">
+            <i class="bi bi-x-circle"></i> Cancel
+          </button>
+        </div>
+      </form>
+    </div>
+  </div>
+
+  <!-- Users list -->
+  <div class="card">
+    <div class="card-header bg-light">
+      <h5 class="mb-0">Users List</h5>
+    </div>
+    <div class="card-body">
+      <div class="table-responsive">
+        <table class="table table-striped table-hover">
+          <thead>
+            <tr>
+              <th>Username</th>
+              <th>Email</th>
+              <th>Role</th>
+              <th>Status</th>
+              <th>Actions</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr *ngFor="let user of users">
+              <td>{{ user.username }}</td>
+              <td>{{ user.email }}</td>
+              <td>
+                <span class="badge rounded-pill" [ngClass]="getRoleBadgeClass(user.role)">
+                  {{ user.role }}
+                </span>
+              </td>
+              <td>
+                <span class="badge rounded-pill" [ngClass]="user.isActive ? 'bg-success' : 'bg-secondary'">
+                  {{ user.isActive ? 'Active' : 'Inactive' }}
+                </span>
+              </td>
+              <td>
+                <div class="btn-group btn-group-sm">
+                  <button class="btn btn-outline-primary" (click)="editUser(user)">
+                    <i class="bi bi-pencil"></i>
+                  </button>
+                  <button class="btn btn-outline-danger" (click)="deleteUser(user)">
+                    <i class="bi bi-trash"></i>
+                  </button>
+                  <button class="btn btn-outline-warning" (click)="toggleUserStatus(user)">
+                    <i class="bi" [ngClass]="user.isActive ? 'bi-ban' : 'bi-check-circle'"></i>
+                  </button>
+                </div>
+              </td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+  </div>
+</div>

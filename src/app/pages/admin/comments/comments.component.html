@@ -1,0 +1,82 @@
+
+<div class="container-fluid py-4">
+  <div class="d-flex justify-content-between align-items-center mb-4">
+    <h2>Comments Management</h2>
+  </div>
+
+  <!-- Comment form -->
+  <div class="card mb-4" *ngIf="selectedComment">
+    <div class="card-header bg-light">
+      <h5 class="mb-0">Edit Comment</h5>
+    </div>
+    <div class="card-body">
+      <form (ngSubmit)="saveComment()">
+        <div class="mb-3">
+          <label for="content" class="form-label">Content</label>
+          <textarea class="form-control" id="content" name="content" rows="4" [(ngModel)]="commentForm.content" required></textarea>
+        </div>
+        <div class="mb-3 form-check">
+          <input type="checkbox" class="form-check-input" id="isApproved" name="isApproved" [(ngModel)]="commentForm.isApproved">
+          <label class="form-check-label" for="isApproved">Approved</label>
+        </div>
+        <div class="d-flex gap-2">
+          <button type="submit" class="btn btn-success">
+            <i class="bi bi-check-circle"></i> Save Changes
+          </button>
+          <button type="button" class="btn btn-secondary" (click)="resetForm()">
+            <i class="bi bi-x-circle"></i> Cancel
+          </button>
+        </div>
+      </form>
+    </div>
+  </div>
+
+  <!-- Comments list -->
+  <div class="card">
+    <div class="card-header bg-light">
+      <h5 class="mb-0">Comments List</h5>
+    </div>
+    <div class="card-body">
+      <div class="table-responsive">
+        <table class="table table-striped table-hover">
+          <thead>
+            <tr>
+              <th>Author</th>
+              <th>Article</th>
+              <th>Content</th>
+              <th>Date</th>
+              <th>Status</th>
+              <th>Actions</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr *ngFor="let comment of comments">
+              <td>{{ comment.author?.username }}</td>
+              <td>{{ comment.article?.title | slice:0:30 }}{{ comment.article?.title.length > 30 ? '...' : '' }}</td>
+              <td>{{ comment.content | slice:0:50 }}{{ comment.content.length > 50 ? '...' : '' }}</td>
+              <td>{{ comment.createdAt | date }}</td>
+              <td>
+                <span class="badge rounded-pill" [ngClass]="comment.isApproved ? 'bg-success' : 'bg-warning'">
+                  {{ comment.isApproved ? 'Approved' : 'Pending' }}
+                </span>
+              </td>
+              <td>
+                <div class="btn-group btn-group-sm">
+                  <button class="btn btn-outline-primary" (click)="editComment(comment)">
+                    <i class="bi bi-pencil"></i>
+                  </button>
+                  <button class="btn btn-outline-warning" (click)="toggleApproval(comment)">
+                    <i class="bi" [ngClass]="comment.isApproved ? 'bi-x-circle' : 'bi-check-circle'"></i>
+                  </button>
+                  <button class="btn btn-outline-danger" (click)="deleteComment(comment)">
+                    <i class="bi bi-trash"></i>
+                  </button>
+                </div>
+              </td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+  </div>
+</div>

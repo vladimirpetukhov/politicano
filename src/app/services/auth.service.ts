@@ -1,6 +1,6 @@
 
 import { Injectable } from '@angular/core';
-import { BehaviorSubject, Observable, of } from 'rxjs';
+import { BehaviorSubject, Observable, of, throwError } from 'rxjs';
 import { User, UserRole } from '../models/user.model';
 
 @Injectable({
@@ -11,29 +11,38 @@ export class AuthService {
   currentUser$ = this.currentUserSubject.asObservable();
 
   // Mock data until we have a real backend
-  private mockUsers: User[] = [
+  private users: User[] = [
     new User({ 
       id: '1', 
       username: 'superadmin', 
-      email: 'superadmin@blog.com', 
+      email: 'superadmin@politicano.com', 
       password: 'password', 
       role: UserRole.SuperAdmin,
-      bio: 'Blog creator and super administrator' 
+      bio: 'Blog creator and super administrator',
+      isActive: true,
+      createdAt: new Date('2023-01-01'),
+      updatedAt: new Date('2023-01-01')
     }),
     new User({ 
       id: '2', 
       username: 'admin', 
-      email: 'admin@blog.com', 
+      email: 'admin@politicano.com', 
       password: 'password', 
       role: UserRole.Admin,
-      bio: 'Blog author and administrator' 
+      bio: 'Blog author and administrator',
+      isActive: true,
+      createdAt: new Date('2023-01-05'),
+      updatedAt: new Date('2023-01-05')
     }),
     new User({ 
       id: '3', 
       username: 'user', 
       email: 'user@example.com', 
       password: 'password', 
-      role: UserRole.User
+      role: UserRole.User,
+      isActive: true,
+      createdAt: new Date('2023-01-10'),
+      updatedAt: new Date('2023-01-10')
     })
   ];
 
@@ -45,32 +54,68 @@ export class AuthService {
     }
   }
 
-  login(email: string, password: string): Observable<User | null> {
-    // Find user by email and password
-    const user = this.mockUsers.find(u => u.email === email && u.password === password);
+  login(email: string, password: string): Observable<User> {
+    const user = this.users.find(u => 
+      u.email === email && 
+      u.password === password &&
+      u.isActive
+    );
+    
     if (user) {
-      // Store user details in local storage
-      localStorage.setItem('currentUser', JSON.stringify(user));
-      this.currentUserSubject.next(user);
-      return of(user);
+      // Clone user and remove password
+      const userToReturn = new User({...user});
+      delete userToReturn.password;
+      
+      // Update last login
+      const index = this.users.findIndex(u => u.id === user.id);
+      if (index !== -1) {
+        this.users[index].lastLogin = new Date();
+      }
+      
+      // Store in local storage
+      localStorage.setItem('currentUser', JSON.stringify(userToReturn));
+      
+      // Update the subject
+      this.currentUserSubject.next(userToReturn);
+      
+      return of(userToReturn);
     }
-    return of(null);
+    
+    return throwError(() => new Error('Invalid email or password'));
   }
 
   logout(): void {
-    // Remove user from local storage
     localStorage.removeItem('currentUser');
     this.currentUserSubject.next(null);
   }
 
-  register(user: User): Observable<User> {
-    // In a real app, this would call an API
-    user.id = (this.mockUsers.length + 1).toString();
-    user.role = UserRole.User;
-    user.createdAt = new Date();
+  register(user: Partial<User>): Observable<User> {
+    // Check if email already exists
+    if (this.users.some(u => u.email === user.email)) {
+      return throwError(() => new Error('Email already in use'));
+    }
     
-    this.mockUsers.push(user);
-    return of(user);
+    // Check if username already exists
+    if (this.users.some(u => u.username === user.username)) {
+      return throwError(() => new Error('Username already in use'));
+    }
+    
+    const newUser = new User({
+      ...user,
+      id: Date.now().toString(),
+      role: UserRole.User, // Default role for new registrations
+      isActive: true,
+      createdAt: new Date(),
+      updatedAt: new Date()
+    });
+    
+    this.users.push(newUser);
+    
+    // Return a copy without password
+    const userToReturn = new User({...newUser});
+    delete userToReturn.password;
+    
+    return of(userToReturn);
   }
 
   getCurrentUser(): User | null {
@@ -78,19 +123,119 @@ export class AuthService {
   }
 
   isLoggedIn(): boolean {
-    return !!this.currentUserSubject.value;
+    return !!this.getCurrentUser();
   }
 
-  hasRole(role: UserRole): boolean {
-    const user = this.currentUserSubject.value;
-    if (!user) return false;
-    
-    if (role === UserRole.SuperAdmin) {
-      return user.role === UserRole.SuperAdmin;
-    } else if (role === UserRole.Admin) {
-      return user.role === UserRole.SuperAdmin || user.role === UserRole.Admin;
+  // Methods for user management (admin only)
+  getAllUsers(): Observable<User[]> {
+    // Return all users without passwords
+    return of(this.users.map(user => {
+      const userCopy = new User({...user});
+      delete userCopy.password;
+      return userCopy;
+    }));
+  }
+
+  getUserById(id: string): Observable<User | undefined> {
+    const user = this.users.find(u => u.id === id);
+    if (user) {
+      const userCopy = new User({...user});
+      delete userCopy.password;
+      return of(userCopy);
+    }
+    return of(undefined);
+  }
+
+  addUser(user: User): Observable<User> {
+    // Check if email already exists
+    if (this.users.some(u => u.email === user.email)) {
+      return throwError(() => new Error('Email already in use'));
     }
     
-    return true; // All users have User role by default
+    // Check if username already exists
+    if (this.users.some(u => u.username === user.username)) {
+      return throwError(() => new Error('Username already in use'));
+    }
+    
+    const newUser = new User({
+      ...user,
+      id: Date.now().toString(),
+      isActive: true,
+      createdAt: new Date(),
+      updatedAt: new Date()
+    });
+    
+    this.users.push(newUser);
+    
+    // Return a copy without password
+    const userToReturn = new User({...newUser});
+    delete userToReturn.password;
+    
+    return of(userToReturn);
+  }
+
+  updateUser(user: User): Observable<User> {
+    const index = this.users.findIndex(u => u.id === user.id);
+    
+    if (index === -1) {
+      return throwError(() => new Error('User not found'));
+    }
+    
+    // Check email uniqueness if it's changed
+    if (user.email !== this.users[index].email && 
+        this.users.some(u => u.email === user.email)) {
+      return throwError(() => new Error('Email already in use'));
+    }
+    
+    // Check username uniqueness if it's changed
+    if (user.username !== this.users[index].username && 
+        this.users.some(u => u.username === user.username)) {
+      return throwError(() => new Error('Username already in use'));
+    }
+    
+    // If no password provided, keep the existing one
+    if (!user.password) {
+      user.password = this.users[index].password;
+    }
+    
+    const updatedUser = new User({
+      ...this.users[index],
+      ...user,
+      updatedAt: new Date()
+    });
+    
+    this.users[index] = updatedUser;
+    
+    // Return a copy without password
+    const userToReturn = new User({...updatedUser});
+    delete userToReturn.password;
+    
+    // If this is the current user, update currentUserSubject and localStorage
+    if (this.currentUserSubject.value?.id === user.id) {
+      this.currentUserSubject.next(userToReturn);
+      localStorage.setItem('currentUser', JSON.stringify(userToReturn));
+    }
+    
+    return of(userToReturn);
+  }
+
+  deleteUser(id: string): Observable<boolean> {
+    // Don't allow deletion of the last SuperAdmin
+    const superAdmins = this.users.filter(u => u.role === UserRole.SuperAdmin);
+    const userToDelete = this.users.find(u => u.id === id);
+    
+    if (superAdmins.length === 1 && userToDelete?.role === UserRole.SuperAdmin) {
+      return throwError(() => new Error('Cannot delete the last Super Admin'));
+    }
+    
+    const initialLength = this.users.length;
+    this.users = this.users.filter(u => u.id !== id);
+    
+    // If deleted user is the current user, log out
+    if (this.currentUserSubject.value?.id === id) {
+      this.logout();
+    }
+    
+    return of(initialLength !== this.users.length);
   }
 }

@@ -1,0 +1,82 @@
+
+<div class="container-fluid py-4">
+  <div class="d-flex justify-content-between align-items-center mb-4">
+    <h2>Categories Management</h2>
+    <button class="btn btn-primary" (click)="addCategory()">
+      <i class="bi bi-plus-circle"></i> Add New Category
+    </button>
+  </div>
+
+  <!-- Category form -->
+  <div class="card mb-4" *ngIf="categoryForm">
+    <div class="card-header bg-light">
+      <h5 class="mb-0">{{ formMode === 'add' ? 'Add New Category' : 'Edit Category' }}</h5>
+    </div>
+    <div class="card-body">
+      <form (ngSubmit)="saveCategory()">
+        <div class="mb-3">
+          <label for="name" class="form-label">Category Name</label>
+          <input type="text" class="form-control" id="name" name="name" [(ngModel)]="categoryForm.name" required>
+        </div>
+        <div class="mb-3">
+          <label for="slug" class="form-label">Slug (URL-friendly name)</label>
+          <input type="text" class="form-control" id="slug" name="slug" [(ngModel)]="categoryForm.slug" 
+                placeholder="Leave empty to auto-generate from name">
+          <small class="text-muted">Used in URLs, e.g., /category/your-slug</small>
+        </div>
+        <div class="mb-3">
+          <label for="description" class="form-label">Description</label>
+          <textarea class="form-control" id="description" name="description" rows="3" [(ngModel)]="categoryForm.description"></textarea>
+        </div>
+        <div class="d-flex gap-2">
+          <button type="submit" class="btn btn-success">
+            <i class="bi bi-check-circle"></i> Save
+          </button>
+          <button type="button" class="btn btn-secondary" (click)="resetForm()">
+            <i class="bi bi-x-circle"></i> Cancel
+          </button>
+        </div>
+      </form>
+    </div>
+  </div>
+
+  <!-- Categories list -->
+  <div class="card">
+    <div class="card-header bg-light">
+      <h5 class="mb-0">Categories List</h5>
+    </div>
+    <div class="card-body">
+      <div class="table-responsive">
+        <table class="table table-striped table-hover">
+          <thead>
+            <tr>
+              <th>Name</th>
+              <th>Slug</th>
+              <th>Description</th>
+              <th>Created</th>
+              <th>Actions</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr *ngFor="let category of categories">
+              <td>{{ category.name }}</td>
+              <td>{{ category.slug }}</td>
+              <td>{{ category.description }}</td>
+              <td>{{ category.createdAt | date }}</td>
+              <td>
+                <div class="btn-group btn-group-sm">
+                  <button class="btn btn-outline-primary" (click)="editCategory(category)">
+                    <i class="bi bi-pencil"></i>
+                  </button>
+                  <button class="btn btn-outline-danger" (click)="deleteCategory(category)">
+                    <i class="bi bi-trash"></i>
+                  </button>
+                </div>
+              </td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+  </div>
+</div>

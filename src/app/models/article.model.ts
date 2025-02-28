@@ -64,3 +64,39 @@ export class Comment {
     this.updatedAt = data.updatedAt || new Date();
   }
 }
+import { User } from './user.model';
+import { Category } from './category.model';
+
+export class Article {
+  id: string;
+  title: string;
+  slug: string;
+  content: string;
+  excerpt: string;
+  author: User | null;
+  category: Category | null;
+  featuredImage?: string;
+  tags: string[];
+  viewCount: number;
+  isPublished: boolean;
+  publishedAt?: Date;
+  createdAt: Date;
+  updatedAt: Date;
+
+  constructor(data: Partial<Article> = {}) {
+    this.id = data.id || '';
+    this.title = data.title || '';
+    this.slug = data.slug || '';
+    this.content = data.content || '';
+    this.excerpt = data.excerpt || '';
+    this.author = data.author || null;
+    this.category = data.category || null;
+    this.featuredImage = data.featuredImage;
+    this.tags = data.tags || [];
+    this.viewCount = data.viewCount || 0;
+    this.isPublished = data.isPublished ?? false;
+    this.publishedAt = data.publishedAt;
+    this.createdAt = data.createdAt || new Date();
+    this.updatedAt = data.updatedAt || new Date();
+  }
+}

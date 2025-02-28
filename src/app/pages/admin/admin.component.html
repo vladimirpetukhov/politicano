@@ -1,0 +1,57 @@
+
+<div class="container-fluid">
+  <div class="row">
+    <!-- Sidebar -->
+    <nav id="sidebar" class="col-md-3 col-lg-2 d-md-block bg-light sidebar">
+      <div class="position-sticky pt-3">
+        <ul class="nav flex-column">
+          <li class="nav-item">
+            <a class="nav-link active" [routerLink]="['/admin/dashboard']">
+              <i class="bi bi-speedometer2 me-2"></i>
+              Dashboard
+            </a>
+          </li>
+          <li class="nav-item">
+            <a class="nav-link" [routerLink]="['/admin/categories']">
+              <i class="bi bi-folder me-2"></i>
+              Categories
+            </a>
+          </li>
+          <li class="nav-item">
+            <a class="nav-link" [routerLink]="['/admin/articles']">
+              <i class="bi bi-file-text me-2"></i>
+              Articles
+            </a>
+          </li>
+          <li class="nav-item">
+            <a class="nav-link" [routerLink]="['/admin/comments']">
+              <i class="bi bi-chat-square-text me-2"></i>
+              Comments
+            </a>
+          </li>
+          <li class="nav-item" *ngIf="isSuperAdmin">
+            <a class="nav-link" [routerLink]="['/admin/users']">
+              <i class="bi bi-people me-2"></i>
+              Users Management
+            </a>
+          </li>
+          <li class="nav-item">
+            <a class="nav-link" [routerLink]="['/']">
+              <i class="bi bi-arrow-left-circle me-2"></i>
+              Back to Site
+            </a>
+          </li>
+        </ul>
+      </div>
+    </nav>
+
+    <!-- Main content -->
+    <main class="col-md-9 ms-sm-auto col-lg-10 px-md-4">
+      <div class="d-flex justify-content-between flex-wrap flex-md-nowrap align-items-center pt-3 pb-2 mb-3 border-bottom">
+        <h1 class="h2">Admin Panel</h1>
+      </div>
+      
+      <router-outlet></router-outlet>
+    </main>
+  </div>
+</div>
