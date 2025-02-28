@@ -1,0 +1,201 @@
+
+<app-header></app-header>
+
+<div class="container mt-4">
+  <!-- Hero Section with Latest News -->
+  <section class="hero-section mb-5">
+    <div class="row">
+      <div class="col-12">
+        <h2 class="section-title">
+          <span *ngIf="currentLanguage === 'en'">Latest News</span>
+          <span *ngIf="currentLanguage === 'bg'">Последни Новини</span>
+          <span *ngIf="currentLanguage === 'ru'">Последние Новости</span>
+          <span *ngIf="currentLanguage === 'es'">Últimas Noticias</span>
+        </h2>
+      </div>
+    </div>
+    
+    <div class="row">
+      <!-- Featured Article -->
+      <div class="col-lg-6 mb-4" *ngIf="recentArticles.length > 0">
+        <div class="card featured-card">
+          <img [src]="recentArticles[0].image" class="card-img-top" alt="Featured Article">
+          <div class="card-body">
+            <div class="d-flex justify-content-between mb-2">
+              <span class="badge bg-primary">{{ recentArticles[0].category.name[currentLanguage] }}</span>
+              <small class="text-muted">{{ recentArticles[0].createdAt | date }}</small>
+            </div>
+            <h3 class="card-title">{{ recentArticles[0].title[currentLanguage] }}</h3>
+            <p class="card-text">{{ recentArticles[0].summary[currentLanguage] }}</p>
+            <div class="d-flex justify-content-between align-items-center">
+              <div>
+                <small class="text-muted me-2">
+                  <i class="fas fa-eye me-1"></i> {{ recentArticles[0].views }}
+                </small>
+                <small class="text-muted me-2">
+                  <i class="fas fa-heart me-1"></i> {{ recentArticles[0].likes }}
+                </small>
+                <small class="text-muted">
+                  <i class="fas fa-comment me-1"></i> {{ recentArticles[0].comments }}
+                </small>
+              </div>
+              <a [routerLink]="['/articles', recentArticles[0].id]" class="btn btn-outline-primary btn-sm">
+                <span *ngIf="currentLanguage === 'en'">Read More</span>
+                <span *ngIf="currentLanguage === 'bg'">Прочети Още</span>
+                <span *ngIf="currentLanguage === 'ru'">Читать Дальше</span>
+                <span *ngIf="currentLanguage === 'es'">Leer Más</span>
+              </a>
+            </div>
+          </div>
+        </div>
+      </div>
+      
+      <!-- Other Recent Articles -->
+      <div class="col-lg-6">
+        <div class="row">
+          <ng-container *ngFor="let article of recentArticles | slice:1:5; let i = index">
+            <div class="col-md-6 mb-4">
+              <div class="card h-100">
+                <img [src]="article.image" class="card-img-top" alt="Article image">
+                <div class="card-body">
+                  <div class="d-flex justify-content-between mb-2">
+                    <span class="badge bg-secondary">{{ article.category.name[currentLanguage] }}</span>
+                    <small class="text-muted">{{ article.createdAt | date:'shortDate' }}</small>
+                  </div>
+                  <h5 class="card-title">{{ article.title[currentLanguage] }}</h5>
+                  <a [routerLink]="['/articles', article.id]" class="stretched-link"></a>
+                </div>
+              </div>
+            </div>
+          </ng-container>
+        </div>
+      </div>
+    </div>
+    
+    <!-- Additional Recent Articles -->
+    <div class="row">
+      <ng-container *ngFor="let article of recentArticles | slice:5:9; let i = index">
+        <div class="col-md-3 mb-4">
+          <div class="card h-100">
+            <img [src]="article.image" class="card-img-top" alt="Article image">
+            <div class="card-body">
+              <div class="d-flex justify-content-between mb-2">
+                <span class="badge bg-secondary">{{ article.category.name[currentLanguage] }}</span>
+                <small class="text-muted">{{ article.createdAt | date:'shortDate' }}</small>
+              </div>
+              <h5 class="card-title">{{ article.title[currentLanguage] }}</h5>
+              <a [routerLink]="['/articles', article.id]" class="stretched-link"></a>
+            </div>
+          </div>
+        </div>
+      </ng-container>
+    </div>
+  </section>
+  
+  <!-- Popular News Tabs -->
+  <section class="popular-news mb-5">
+    <div class="row">
+      <div class="col-12">
+        <h2 class="section-title">
+          <span *ngIf="currentLanguage === 'en'">Popular News</span>
+          <span *ngIf="currentLanguage === 'bg'">Популярни Новини</span>
+          <span *ngIf="currentLanguage === 'ru'">Популярные Новости</span>
+          <span *ngIf="currentLanguage === 'es'">Noticias Populares</span>
+        </h2>
+        <ul class="nav nav-tabs" id="popularNewsTabs">
+          <li class="nav-item">
+            <a class="nav-link active" id="most-viewed-tab" data-bs-toggle="tab" href="#most-viewed" role="tab">
+              <span *ngIf="currentLanguage === 'en'">Most Viewed</span>
+              <span *ngIf="currentLanguage === 'bg'">Най-Гледани</span>
+              <span *ngIf="currentLanguage === 'ru'">Самые Просматриваемые</span>
+              <span *ngIf="currentLanguage === 'es'">Más Vistos</span>
+            </a>
+          </li>
+          <li class="nav-item">
+            <a class="nav-link" id="most-liked-tab" data-bs-toggle="tab" href="#most-liked" role="tab">
+              <span *ngIf="currentLanguage === 'en'">Most Liked</span>
+              <span *ngIf="currentLanguage === 'bg'">Най-Харесвани</span>
+              <span *ngIf="currentLanguage === 'ru'">Самые Популярные</span>
+              <span *ngIf="currentLanguage === 'es'">Más Gustados</span>
+            </a>
+          </li>
+          <li class="nav-item">
+            <a class="nav-link" id="most-commented-tab" data-bs-toggle="tab" href="#most-commented" role="tab">
+              <span *ngIf="currentLanguage === 'en'">Most Commented</span>
+              <span *ngIf="currentLanguage === 'bg'">Най-Коментирани</span>
+              <span *ngIf="currentLanguage === 'ru'">Самые Обсуждаемые</span>
+              <span *ngIf="currentLanguage === 'es'">Más Comentados</span>
+            </a>
+          </li>
+        </ul>
+        
+        <div class="tab-content" id="popularNewsTabsContent">
+          <!-- Most Viewed Tab -->
+          <div class="tab-pane fade show active" id="most-viewed" role="tabpanel">
+            <div class="row mt-3">
+              <ng-container *ngFor="let article of mostViewedArticles; let i = index">
+                <div class="col-md-3 mb-4">
+                  <div class="card h-100">
+                    <img [src]="article.image" class="card-img-top" alt="Article image">
+                    <div class="card-body">
+                      <div class="d-flex justify-content-between mb-2">
+                        <span class="badge bg-info">{{ article.category.name[currentLanguage] }}</span>
+                        <small class="text-muted"><i class="fas fa-eye"></i> {{ article.views }}</small>
+                      </div>
+                      <h5 class="card-title">{{ article.title[currentLanguage] }}</h5>
+                      <a [routerLink]="['/articles', article.id]" class="stretched-link"></a>
+                    </div>
+                  </div>
+                </div>
+              </ng-container>
+            </div>
+          </div>
+          
+          <!-- Most Liked Tab -->
+          <div class="tab-pane fade" id="most-liked" role="tabpanel">
+            <div class="row mt-3">
+              <ng-container *ngFor="let article of mostLikedArticles; let i = index">
+                <div class="col-md-3 mb-4">
+                  <div class="card h-100">
+                    <img [src]="article.image" class="card-img-top" alt="Article image">
+                    <div class="card-body">
+                      <div class="d-flex justify-content-between mb-2">
+                        <span class="badge bg-danger">{{ article.category.name[currentLanguage] }}</span>
+                        <small class="text-muted"><i class="fas fa-heart"></i> {{ article.likes }}</small>
+                      </div>
+                      <h5 class="card-title">{{ article.title[currentLanguage] }}</h5>
+                      <a [routerLink]="['/articles', article.id]" class="stretched-link"></a>
+                    </div>
+                  </div>
+                </div>
+              </ng-container>
+            </div>
+          </div>
+          
+          <!-- Most Commented Tab -->
+          <div class="tab-pane fade" id="most-commented" role="tabpanel">
+            <div class="row mt-3">
+              <ng-container *ngFor="let article of mostCommentedArticles; let i = index">
+                <div class="col-md-3 mb-4">
+                  <div class="card h-100">
+                    <img [src]="article.image" class="card-img-top" alt="Article image">
+                    <div class="card-body">
+                      <div class="d-flex justify-content-between mb-2">
+                        <span class="badge bg-success">{{ article.category.name[currentLanguage] }}</span>
+                        <small class="text-muted"><i class="fas fa-comment"></i> {{ article.comments }}</small>
+                      </div>
+                      <h5 class="card-title">{{ article.title[currentLanguage] }}</h5>
+                      <a [routerLink]="['/articles', article.id]" class="stretched-link"></a>
+                    </div>
+                  </div>
+                </div>
+              </ng-container>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+</div>
+
+<app-footer></app-footer>

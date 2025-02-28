@@ -1,0 +1,97 @@
+
+<footer class="bg-dark text-white py-4 mt-5">
+  <div class="container">
+    <div class="row">
+      <div class="col-lg-4 mb-4">
+        <h5>
+          <span *ngIf="currentLanguage === 'en'">News Blog</span>
+          <span *ngIf="currentLanguage === 'bg'">Новинарски Блог</span>
+          <span *ngIf="currentLanguage === 'ru'">Новостной Блог</span>
+          <span *ngIf="currentLanguage === 'es'">Blog de Noticias</span>
+        </h5>
+        <p class="text-muted">
+          <span *ngIf="currentLanguage === 'en'">
+            Latest news and updates from around the world.
+          </span>
+          <span *ngIf="currentLanguage === 'bg'">
+            Последни новини и актуализации от цял свят.
+          </span>
+          <span *ngIf="currentLanguage === 'ru'">
+            Последние новости и обновления со всего мира.
+          </span>
+          <span *ngIf="currentLanguage === 'es'">
+            Últimas noticias y actualizaciones de todo el mundo.
+          </span>
+        </p>
+        <div class="social-icons">
+          <a href="#" class="text-white me-2"><i class="fab fa-facebook-f"></i></a>
+          <a href="#" class="text-white me-2"><i class="fab fa-twitter"></i></a>
+          <a href="#" class="text-white me-2"><i class="fab fa-instagram"></i></a>
+          <a href="#" class="text-white me-2"><i class="fab fa-linkedin-in"></i></a>
+        </div>
+      </div>
+      
+      <div class="col-lg-4 mb-4">
+        <h5>
+          <span *ngIf="currentLanguage === 'en'">Categories</span>
+          <span *ngIf="currentLanguage === 'bg'">Категории</span>
+          <span *ngIf="currentLanguage === 'ru'">Категории</span>
+          <span *ngIf="currentLanguage === 'es'">Categorías</span>
+        </h5>
+        <ul class="list-unstyled">
+          <li *ngFor="let category of categories">
+            <a [routerLink]="['/categories', category.id]" class="text-muted text-decoration-none">
+              {{ category.name[currentLanguage] }}
+            </a>
+          </li>
+        </ul>
+      </div>
+      
+      <div class="col-lg-4 mb-4">
+        <h5>
+          <span *ngIf="currentLanguage === 'en'">Quick Links</span>
+          <span *ngIf="currentLanguage === 'bg'">Бързи Връзки</span>
+          <span *ngIf="currentLanguage === 'ru'">Быстрые Ссылки</span>
+          <span *ngIf="currentLanguage === 'es'">Enlaces Rápidos</span>
+        </h5>
+        <ul class="list-unstyled">
+          <li>
+            <a routerLink="/" class="text-muted text-decoration-none">
+              <span *ngIf="currentLanguage === 'en'">Home</span>
+              <span *ngIf="currentLanguage === 'bg'">Начало</span>
+              <span *ngIf="currentLanguage === 'ru'">Главная</span>
+              <span *ngIf="currentLanguage === 'es'">Inicio</span>
+            </a>
+          </li>
+          <li>
+            <a routerLink="/articles" class="text-muted text-decoration-none">
+              <span *ngIf="currentLanguage === 'en'">All Articles</span>
+              <span *ngIf="currentLanguage === 'bg'">Всички Статии</span>
+              <span *ngIf="currentLanguage === 'ru'">Все Статьи</span>
+              <span *ngIf="currentLanguage === 'es'">Todos los Artículos</span>
+            </a>
+          </li>
+          <li>
+            <a routerLink="/search" class="text-muted text-decoration-none">
+              <span *ngIf="currentLanguage === 'en'">Search</span>
+              <span *ngIf="currentLanguage === 'bg'">Търсене</span>
+              <span *ngIf="currentLanguage === 'ru'">Поиск</span>
+              <span *ngIf="currentLanguage === 'es'">Buscar</span>
+            </a>
+          </li>
+        </ul>
+      </div>
+    </div>
+    
+    <hr class="bg-secondary">
+    
+    <div class="text-center text-muted">
+      <small>&copy; {{ currentYear }} News Blog. 
+        <span *ngIf="currentLanguage === 'en'">All Rights Reserved.</span>
+        <span *ngIf="currentLanguage === 'bg'">Всички права запазени.</span>
+        <span *ngIf="currentLanguage === 'ru'">Все права защищены.</span>
+        <span *ngIf="currentLanguage === 'es'">Todos los derechos reservados.</span>
+      </small>
+    </div>
+  </div>
+</footer>

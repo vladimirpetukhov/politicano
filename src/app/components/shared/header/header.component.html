@@ -1,0 +1,135 @@
+
+<header class="navbar navbar-expand-lg navbar-dark bg-dark">
+  <div class="container">
+    <a class="navbar-brand" routerLink="/">
+      <i class="fas fa-newspaper me-2"></i>
+      <span *ngIf="currentLanguage === 'en'">News Blog</span>
+      <span *ngIf="currentLanguage === 'bg'">Новинарски Блог</span>
+      <span *ngIf="currentLanguage === 'ru'">Новостной Блог</span>
+      <span *ngIf="currentLanguage === 'es'">Blog de Noticias</span>
+    </a>
+    
+    <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarSupportedContent">
+      <span class="navbar-toggler-icon"></span>
+    </button>
+    
+    <div class="collapse navbar-collapse" id="navbarSupportedContent">
+      <ul class="navbar-nav me-auto mb-2 mb-lg-0">
+        <li class="nav-item">
+          <a class="nav-link" routerLink="/" routerLinkActive="active" [routerLinkActiveOptions]="{exact: true}">
+            <span *ngIf="currentLanguage === 'en'">Home</span>
+            <span *ngIf="currentLanguage === 'bg'">Начало</span>
+            <span *ngIf="currentLanguage === 'ru'">Главная</span>
+            <span *ngIf="currentLanguage === 'es'">Inicio</span>
+          </a>
+        </li>
+        
+        <li class="nav-item dropdown" ngbDropdown>
+          <a class="nav-link dropdown-toggle" ngbDropdownToggle id="categoriesDropdown" role="button">
+            <span *ngIf="currentLanguage === 'en'">Categories</span>
+            <span *ngIf="currentLanguage === 'bg'">Категории</span>
+            <span *ngIf="currentLanguage === 'ru'">Категории</span>
+            <span *ngIf="currentLanguage === 'es'">Categorías</span>
+          </a>
+          <ul class="dropdown-menu" ngbDropdownMenu aria-labelledby="categoriesDropdown">
+            <li *ngFor="let category of categories">
+              <a class="dropdown-item" [routerLink]="['/categories', category.id]">
+                {{ category.name[currentLanguage] }}
+              </a>
+            </li>
+          </ul>
+        </li>
+        
+        <li class="nav-item" *ngIf="hasRole(UserRole.Admin)">
+          <a class="nav-link" routerLink="/admin" routerLinkActive="active">
+            <span *ngIf="currentLanguage === 'en'">Admin</span>
+            <span *ngIf="currentLanguage === 'bg'">Админ</span>
+            <span *ngIf="currentLanguage === 'ru'">Админ</span>
+            <span *ngIf="currentLanguage === 'es'">Admin</span>
+          </a>
+        </li>
+      </ul>
+      
+      <form class="d-flex me-3" (ngSubmit)="search()">
+        <div class="input-group">
+          <input 
+            class="form-control" 
+            type="search" 
+            name="searchQuery"
+            [(ngModel)]="searchQuery"
+            [placeholder]="currentLanguage === 'en' ? 'Search...' : 
+                         currentLanguage === 'bg' ? 'Търсене...' : 
+                         currentLanguage === 'ru' ? 'Поиск...' : 'Buscar...'"
+          />
+          <button class="btn btn-outline-light" type="submit">
+            <i class="fas fa-search"></i>
+          </button>
+        </div>
+      </form>
+      
+      <ul class="navbar-nav">
+        <li class="nav-item dropdown" ngbDropdown>
+          <a class="nav-link dropdown-toggle" ngbDropdownToggle id="languageDropdown" role="button">
+            <i class="fas fa-globe me-1"></i>
+            {{ currentLanguage.toUpperCase() }}
+          </a>
+          <ul class="dropdown-menu" ngbDropdownMenu aria-labelledby="languageDropdown">
+            <li><a class="dropdown-item" (click)="switchLanguage('en')">English</a></li>
+            <li><a class="dropdown-item" (click)="switchLanguage('bg')">Български</a></li>
+            <li><a class="dropdown-item" (click)="switchLanguage('ru')">Русский</a></li>
+            <li><a class="dropdown-item" (click)="switchLanguage('es')">Español</a></li>
+          </ul>
+        </li>
+        
+        <ng-container *ngIf="!currentUser; else userMenu">
+          <li class="nav-item">
+            <a class="nav-link" routerLink="/login">
+              <span *ngIf="currentLanguage === 'en'">Login</span>
+              <span *ngIf="currentLanguage === 'bg'">Вход</span>
+              <span *ngIf="currentLanguage === 'ru'">Вход</span>
+              <span *ngIf="currentLanguage === 'es'">Iniciar sesión</span>
+            </a>
+          </li>
+          <li class="nav-item">
+            <a class="nav-link" routerLink="/register">
+              <span *ngIf="currentLanguage === 'en'">Register</span>
+              <span *ngIf="currentLanguage === 'bg'">Регистрация</span>
+              <span *ngIf="currentLanguage === 'ru'">Регистрация</span>
+              <span *ngIf="currentLanguage === 'es'">Registrarse</span>
+            </a>
+          </li>
+        </ng-container>
+        
+        <ng-template #userMenu>
+          <li class="nav-item dropdown" ngbDropdown>
+            <a class="nav-link dropdown-toggle" ngbDropdownToggle id="userDropdown" role="button">
+              <i class="fas fa-user me-1"></i>
+              {{ currentUser?.username }}
+            </a>
+            <ul class="dropdown-menu" ngbDropdownMenu aria-labelledby="userDropdown">
+              <li>
+                <a class="dropdown-item" routerLink="/user/profile">
+                  <i class="fas fa-id-card me-2"></i>
+                  <span *ngIf="currentLanguage === 'en'">Profile</span>
+                  <span *ngIf="currentLanguage === 'bg'">Профил</span>
+                  <span *ngIf="currentLanguage === 'ru'">Профиль</span>
+                  <span *ngIf="currentLanguage === 'es'">Perfil</span>
+                </a>
+              </li>
+              <li><hr class="dropdown-divider"></li>
+              <li>
+                <a class="dropdown-item" (click)="logout()">
+                  <i class="fas fa-sign-out-alt me-2"></i>
+                  <span *ngIf="currentLanguage === 'en'">Logout</span>
+                  <span *ngIf="currentLanguage === 'bg'">Изход</span>
+                  <span *ngIf="currentLanguage === 'ru'">Выход</span>
+                  <span *ngIf="currentLanguage === 'es'">Cerrar sesión</span>
+                </a>
+              </li>
+            </ul>
+          </li>
+        </ng-template>
+      </ul>
+    </div>
+  </div>
+</header>
