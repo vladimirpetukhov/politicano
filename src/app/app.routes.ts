@@ -1,72 +1,22 @@
-
 import { Routes } from '@angular/router';
 
 export const routes: Routes = [
+  { path: '', redirectTo: '/home', pathMatch: 'full' },
+  { path: 'home', loadComponent: () => import('./pages/home/home.component').then(m => m.HomeComponent) },
   {
-    path: '',
-    loadComponent: () => import('./pages/home/home.component').then(m => m.HomeComponent)
-  },
-  {
-    path: 'articles/:id',
-    loadComponent: () => import('./pages/articles/article-detail/article-detail.component').then(m => m.ArticleDetailComponent)
-  },
-  {
-    path: 'articles/category/:categoryId',
-    loadComponent: () => import('./pages/articles/category-articles/category-articles.component').then(m => m.CategoryArticlesComponent)
-  },
-  {
-    path: 'articles/author/:authorId',
-    loadComponent: () => import('./pages/articles/author-articles/author-articles.component').then(m => m.AuthorArticlesComponent)
-  },
-  {
-    path: 'auth/login',
-    loadComponent: () => import('./pages/auth/login/login.component').then(m => m.LoginComponent)
-  },
-  {
-    path: 'auth/register',
-    loadComponent: () => import('./pages/auth/register/register.component').then(m => m.RegisterComponent)
-  },
-  {
-    path: 'admin',
-    loadComponent: () => import('./pages/admin/admin-dashboard/admin-dashboard.component').then(m => m.AdminDashboardComponent),
+    path: 'articles',
     children: [
-      {
-        path: '',
-        redirectTo: 'dashboard',
-        pathMatch: 'full'
-      },
-      {
-        path: 'dashboard',
-        loadComponent: () => import('./pages/admin/admin-dashboard/admin-dashboard.component').then(m => m.AdminDashboardComponent)
-      },
-      {
-        path: 'articles',
-        loadComponent: () => import('./pages/admin/article-list/article-list.component').then(m => m.ArticleListComponent)
-      },
-      {
-        path: 'articles/create',
-        loadComponent: () => import('./pages/admin/article-editor/article-editor.component').then(m => m.ArticleEditorComponent)
-      },
-      {
-        path: 'articles/edit/:id',
-        loadComponent: () => import('./pages/admin/article-editor/article-editor.component').then(m => m.ArticleEditorComponent)
-      },
-      {
-        path: 'users',
-        loadComponent: () => import('./pages/admin/user-management/user-management.component').then(m => m.UserManagementComponent)
-      },
-      {
-        path: 'profile',
-        loadComponent: () => import('./pages/user/profile/profile.component').then(m => m.ProfileComponent)
-      }
+      { path: 'category/:id', loadComponent: () => import('./pages/articles/category-articles/category-articles.component').then(m => m.CategoryArticlesComponent) },
+      { path: 'author/:id', loadComponent: () => import('./pages/articles/author-articles/author-articles.component').then(m => m.AuthorArticlesComponent) },
+      { path: ':id', loadComponent: () => import('./pages/articles/article-detail/article-detail.component').then(m => m.ArticleDetailComponent) }
     ]
   },
   {
-    path: 'user/profile',
-    loadComponent: () => import('./pages/user/profile/profile.component').then(m => m.ProfileComponent)
+    path: 'auth',
+    children: [
+      { path: 'login', loadComponent: () => import('./pages/auth/login/login.component').then(m => m.LoginComponent) },
+      { path: 'register', loadComponent: () => import('./pages/auth/register/register.component').then(m => m.RegisterComponent) }
+    ]
   },
-  {
-    path: '**',
-    loadComponent: () => import('./pages/not-found/not-found.component').then(m => m.NotFoundComponent)
-  }
+  { path: '**', redirectTo: '/home' }
 ];
