@@ -1,0 +1,70 @@
+
+<div class="container mt-4">
+  <div class="row">
+    <div class="col-12">
+      <h2 class="latest-articles-title">Latest News</h2>
+    </div>
+  </div>
+
+  <div class="row">
+    <div class="col-lg-8">
+      <!-- Latest Articles Grid -->
+      <div class="row">
+        <div *ngFor="let article of latestArticles.slice(0, 8)" class="col-md-6 mb-4">
+          <div class="card h-100 shadow-sm article-card">
+            <img *ngIf="article.imageUrl" [src]="article.imageUrl" class="card-img-top article-image" [alt]="article.title">
+            <div class="card-body">
+              <h5 class="card-title">{{ article.title }}</h5>
+              <p class="card-text article-excerpt">{{ article.excerpt }}</p>
+              <div class="article-meta">
+                <small class="text-muted">{{ article.author.username }} | {{ article.publishedAt | date }}</small>
+              </div>
+              <a [routerLink]="['/articles', article.id]" class="btn btn-outline-primary mt-2">Read More</a>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+    
+    <div class="col-lg-4">
+      <!-- Popular Articles Sidebar -->
+      <div class="popular-articles">
+        <!-- Most Read -->
+        <div class="mb-4">
+          <h3 class="section-title">Most Read</h3>
+          <ul class="list-group list-group-flush">
+            <li *ngFor="let article of mostReadArticles.slice(0, 5)" class="list-group-item px-0">
+              <a [routerLink]="['/articles', article.id]" class="popular-article-link">
+                {{ article.title }}
+              </a>
+            </li>
+          </ul>
+        </div>
+        
+        <!-- Most Discussed -->
+        <div class="mb-4">
+          <h3 class="section-title">Most Discussed</h3>
+          <ul class="list-group list-group-flush">
+            <li *ngFor="let article of mostDiscussedArticles.slice(0, 5)" class="list-group-item px-0">
+              <a [routerLink]="['/articles', article.id]" class="popular-article-link">
+                {{ article.title }}
+              </a>
+            </li>
+          </ul>
+        </div>
+        
+        <!-- Most Liked -->
+        <div class="mb-4">
+          <h3 class="section-title">Most Liked</h3>
+          <ul class="list-group list-group-flush">
+            <li *ngFor="let article of mostLikedArticles.slice(0, 5)" class="list-group-item px-0">
+              <a [routerLink]="['/articles', article.id]" class="popular-article-link">
+                {{ article.title }}
+              </a>
+            </li>
+          </ul>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

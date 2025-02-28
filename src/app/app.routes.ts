@@ -1,75 +1,72 @@
-import { Routes } from '@angular/router';
 
-export const routes: Routes = [];
 import { Routes } from '@angular/router';
-import { UserRole } from './models/user.model';
 
 export const routes: Routes = [
   {
     path: '',
-    loadComponent: () => import('./components/home/home.component').then(m => m.HomeComponent)
-  },
-  {
-    path: 'login',
-    loadComponent: () => import('./components/auth/login/login.component').then(m => m.LoginComponent)
-  },
-  {
-    path: 'register',
-    loadComponent: () => import('./components/auth/register/register.component').then(m => m.RegisterComponent)
-  },
-  {
-    path: 'articles',
-    loadComponent: () => import('./components/articles/article-list/article-list.component').then(m => m.ArticleListComponent)
+    loadComponent: () => import('./pages/home/home.component').then(m => m.HomeComponent)
   },
   {
     path: 'articles/:id',
-    loadComponent: () => import('./components/articles/article-detail/article-detail.component').then(m => m.ArticleDetailComponent)
+    loadComponent: () => import('./pages/articles/article-detail/article-detail.component').then(m => m.ArticleDetailComponent)
   },
   {
-    path: 'categories/:id',
-    loadComponent: () => import('./components/categories/category-articles/category-articles.component').then(m => m.CategoryArticlesComponent)
+    path: 'articles/category/:categoryId',
+    loadComponent: () => import('./pages/articles/category-articles/category-articles.component').then(m => m.CategoryArticlesComponent)
   },
   {
-    path: 'search',
-    loadComponent: () => import('./components/search/search.component').then(m => m.SearchComponent)
+    path: 'articles/author/:authorId',
+    loadComponent: () => import('./pages/articles/author-articles/author-articles.component').then(m => m.AuthorArticlesComponent)
+  },
+  {
+    path: 'auth/login',
+    loadComponent: () => import('./pages/auth/login/login.component').then(m => m.LoginComponent)
+  },
+  {
+    path: 'auth/register',
+    loadComponent: () => import('./pages/auth/register/register.component').then(m => m.RegisterComponent)
   },
   {
     path: 'admin',
-    loadComponent: () => import('./components/admin/admin-dashboard/admin-dashboard.component').then(m => m.AdminDashboardComponent),
+    loadComponent: () => import('./pages/admin/admin-dashboard/admin-dashboard.component').then(m => m.AdminDashboardComponent),
     children: [
       {
         path: '',
-        redirectTo: 'articles',
+        redirectTo: 'dashboard',
         pathMatch: 'full'
       },
       {
+        path: 'dashboard',
+        loadComponent: () => import('./pages/admin/admin-dashboard/admin-dashboard.component').then(m => m.AdminDashboardComponent)
+      },
+      {
         path: 'articles',
-        loadComponent: () => import('./components/admin/article-management/article-management.component').then(m => m.ArticleManagementComponent)
+        loadComponent: () => import('./pages/admin/article-list/article-list.component').then(m => m.ArticleListComponent)
       },
       {
         path: 'articles/create',
-        loadComponent: () => import('./components/admin/article-editor/article-editor.component').then(m => m.ArticleEditorComponent)
+        loadComponent: () => import('./pages/admin/article-editor/article-editor.component').then(m => m.ArticleEditorComponent)
       },
       {
         path: 'articles/edit/:id',
-        loadComponent: () => import('./components/admin/article-editor/article-editor.component').then(m => m.ArticleEditorComponent)
+        loadComponent: () => import('./pages/admin/article-editor/article-editor.component').then(m => m.ArticleEditorComponent)
       },
       {
         path: 'users',
-        loadComponent: () => import('./components/admin/user-management/user-management.component').then(m => m.UserManagementComponent)
+        loadComponent: () => import('./pages/admin/user-management/user-management.component').then(m => m.UserManagementComponent)
       },
       {
         path: 'profile',
-        loadComponent: () => import('./components/user/profile/profile.component').then(m => m.ProfileComponent)
+        loadComponent: () => import('./pages/user/profile/profile.component').then(m => m.ProfileComponent)
       }
     ]
   },
   {
     path: 'user/profile',
-    loadComponent: () => import('./components/user/profile/profile.component').then(m => m.ProfileComponent)
+    loadComponent: () => import('./pages/user/profile/profile.component').then(m => m.ProfileComponent)
   },
   {
     path: '**',
-    loadComponent: () => import('./components/not-found/not-found.component').then(m => m.NotFoundComponent)
+    loadComponent: () => import('./pages/not-found/not-found.component').then(m => m.NotFoundComponent)
   }
 ];
