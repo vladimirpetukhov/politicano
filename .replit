@@ -10,7 +10,7 @@ localPort = 4200
 externalPort = 80
 
 [workflows]
-runButton = "Start"
+runButton = "Angular Dev Server"
 
 [[workflows.workflow]]
 name = "Start"
@@ -19,3 +19,11 @@ author = 10394243
 [[workflows.workflow.tasks]]
 task = "shell.exec"
 args = "npm run start"
+
+[[workflows.workflow]]
+name = "Angular Dev Server"
+author = 10394243
+
+[[workflows.workflow.tasks]]
+task = "shell.exec"
+args = "npm start"
