@@ -24,7 +24,7 @@ export function ArticleCard({ article }: ArticleCardProps) {
               </AvatarFallback>
             </Avatar>
             <div className="text-sm">
-              <p className="font-medium">{author?.username || "Неизвестен автор"}</p>
+              <p className="font-medium">{author?.email || "Неизвестен автор"}</p>
               <p className="text-muted-foreground text-xs">
                 {author?.role === "admin" ? "Администратор" : author?.role === "blogger" ? "Блогър" : "Потребител"}
               </p>

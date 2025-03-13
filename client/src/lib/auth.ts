@@ -4,22 +4,22 @@ import { setUser } from "@/store/slices/authSlice";
 
 // Моркнати credentials за тестване
 const TEST_CREDENTIALS = {
-  admin: { username: "admin", password: "admin123" },
-  blogger: { username: "blogger", password: "blog123" },
-  user: { username: "user", password: "user123" },
+  admin: { email: "admin@politicalblog.com", password: "admin123" },
+  blogger: { email: "blogger@politicalblog.com", password: "blog123" },
+  user: { email: "user@politicalblog.com", password: "user123" },
 };
 
 // Симулира login с credentials или социален вход
-export const mockLogin = (username?: string, password?: string) => {
+export const mockLogin = (email?: string, password?: string) => {
   let user;
 
-  if (username && password) {
+  if (email && password) {
     // Проверка на credentials
-    if (username === TEST_CREDENTIALS.admin.username && password === TEST_CREDENTIALS.admin.password) {
+    if (email === TEST_CREDENTIALS.admin.email && password === TEST_CREDENTIALS.admin.password) {
       user = mockUsers.find(u => u.role === "admin");
-    } else if (username === TEST_CREDENTIALS.blogger.username && password === TEST_CREDENTIALS.blogger.password) {
+    } else if (email === TEST_CREDENTIALS.blogger.email && password === TEST_CREDENTIALS.blogger.password) {
       user = mockUsers.find(u => u.role === "blogger");
-    } else if (username === TEST_CREDENTIALS.user.username && password === TEST_CREDENTIALS.user.password) {
+    } else if (email === TEST_CREDENTIALS.user.email && password === TEST_CREDENTIALS.user.password) {
       user = mockUsers.find(u => u.role === "user");
     }
   } else {
@@ -33,18 +33,18 @@ export const mockLogin = (username?: string, password?: string) => {
 };
 
 // Симулира регистрация
-export const mockRegister = (username: string, password: string) => {
+export const mockRegister = (email: string, password: string) => {
   // Проверка дали потребителя вече съществува
-  const existingUser = mockUsers.find(u => u.username === username);
+  const existingUser = mockUsers.find(u => u.email === email);
   if (existingUser) {
-    throw new Error("Потребителското име вече съществува");
+    throw new Error("Този имейл вече е регистриран");
   }
 
   // Създаване на нов потребител
   const newUser = {
     id: mockUsers.length + 1,
     uid: `mock-${mockUsers.length + 1}`,
-    username,
+    email,
     role: "user" as const,
   };
 

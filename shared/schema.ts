@@ -7,7 +7,7 @@ export const userRoles = ["admin", "blogger", "user"] as const;
 export const users = pgTable("users", {
   id: serial("id").primaryKey(),
   uid: text("uid").notNull().unique(), // Firebase UID
-  username: text("username").notNull(),
+  email: text("email").notNull().unique(),
   role: text("role", { enum: userRoles }).notNull().default("user"),
 });
 
@@ -31,7 +31,7 @@ export const comments = pgTable("comments", {
 
 export const insertUserSchema = createInsertSchema(users).pick({
   uid: true,
-  username: true,
+  email: true,
   role: true,
 });
 

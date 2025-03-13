@@ -4,19 +4,19 @@ export const mockUsers: User[] = [
   {
     id: 1,
     uid: "mock-1",
-    username: "Admin User",
+    email: "admin@politicalblog.com",
     role: "admin",
   },
   {
     id: 2,
     uid: "mock-2",
-    username: "Blogger User",
+    email: "blogger@politicalblog.com",
     role: "blogger",
   },
   {
     id: 3,
     uid: "mock-3",
-    username: "Regular User",
+    email: "user@politicalblog.com",
     role: "user",
   },
 ];

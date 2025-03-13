@@ -20,12 +20,12 @@ import {
 } from "@/components/ui/tabs";
 
 const loginSchema = z.object({
-  username: z.string().min(1, "Потребителското име е задължително"),
+  email: z.string().email("Невалиден имейл адрес"),
   password: z.string().min(6, "Паролата трябва да е поне 6 символа"),
 });
 
 const registerSchema = z.object({
-  username: z.string().min(1, "Потребителското име е задължително"),
+  email: z.string().email("Невалиден имейл адрес"),
   password: z.string().min(6, "Паролата трябва да е поне 6 символа"),
   confirmPassword: z.string().min(6, "Паролата трябва да е поне 6 символа"),
 }).refine((data) => data.password === data.confirmPassword, {
@@ -58,11 +58,11 @@ export default function Login() {
 
   const onLogin = (data: LoginForm) => {
     try {
-      mockLogin(data.username, data.password);
+      mockLogin(data.email, data.password);
     } catch (error) {
       toast({
         title: "Грешка",
-        description: "Невалидно потребителско име или парола",
+        description: "Невалиден имейл или парола",
         variant: "destructive",
       });
     }
@@ -70,10 +70,10 @@ export default function Login() {
 
   const onRegister = (data: RegisterForm) => {
     try {
-      mockRegister(data.username, data.password);
+      mockRegister(data.email, data.password);
       toast({
         title: "Успех",
-        description: "Регистрацията е успешна",
+        description: "Изпратихме Ви имейл за потвърждение на регистрацията",
       });
     } catch (error) {
       toast({
@@ -105,12 +105,13 @@ export default function Login() {
               <form onSubmit={loginForm.handleSubmit(onLogin)} className="space-y-4">
                 <div className="space-y-2">
                   <Input
-                    placeholder="Потребителско име"
-                    {...loginForm.register("username")}
+                    type="email"
+                    placeholder="Имейл адрес"
+                    {...loginForm.register("email")}
                   />
-                  {loginForm.formState.errors.username && (
+                  {loginForm.formState.errors.email && (
                     <p className="text-sm text-destructive">
-                      {loginForm.formState.errors.username.message}
+                      {loginForm.formState.errors.email.message}
                     </p>
                   )}
                 </div>
@@ -138,12 +139,13 @@ export default function Login() {
               <form onSubmit={registerForm.handleSubmit(onRegister)} className="space-y-4">
                 <div className="space-y-2">
                   <Input
-                    placeholder="Потребителско име"
-                    {...registerForm.register("username")}
+                    type="email"
+                    placeholder="Имейл адрес"
+                    {...registerForm.register("email")}
                   />
-                  {registerForm.formState.errors.username && (
+                  {registerForm.formState.errors.email && (
                     <p className="text-sm text-destructive">
-                      {registerForm.formState.errors.username.message}
+                      {registerForm.formState.errors.email.message}
                     </p>
                   )}
                 </div>
