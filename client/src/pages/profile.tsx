@@ -6,14 +6,14 @@ import { Input } from "@/components/ui/input";
 import { useForm } from "react-hook-form";
 import { useSelector } from "react-redux";
 import { RootState } from "@/store/store";
-import { UpdateUser } from "@shared/schema";
+import { UpdateUser, ChangePassword } from "@shared/schema";
 import { zodResolver } from "@hookform/resolvers/zod";
-import { updateUserSchema } from "@shared/schema";
+import { updateUserSchema, changePasswordSchema } from "@shared/schema";
 import { useToast } from "@/hooks/use-toast";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { User, Loader2 } from "lucide-react";
 import { AuthorSubscriptions } from "@/components/profile/AuthorSubscriptions";
-import { updateUserProfile } from "@/lib/auth";
+import { updateUserProfile, changePassword } from "@/lib/auth";
 import { uploadAvatar } from "@/lib/firebase";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 
@@ -31,6 +31,10 @@ export default function ProfilePage() {
       displayName: user?.displayName || "",
       avatarUrl: user?.avatarUrl || "",
     },
+  });
+
+  const passwordForm = useForm<ChangePassword>({
+    resolver: zodResolver(changePasswordSchema),
   });
 
   // Redirect if not logged in
@@ -102,6 +106,26 @@ export default function ProfilePage() {
       toast({
         title: "Грешка",
         description: "Неуспешно обновяване на профила",
+        variant: "destructive",
+      });
+    } finally {
+      setSaving(false);
+    }
+  };
+
+  const onChangePassword = async (data: ChangePassword) => {
+    setSaving(true);
+    try {
+      await changePassword(data.currentPassword, data.newPassword);
+      toast({
+        title: "Успех",
+        description: "Паролата е променена успешно",
+      });
+      passwordForm.reset();
+    } catch (error) {
+      toast({
+        title: "Грешка",
+        description: "Грешна текуща парола или възникна проблем",
         variant: "destructive",
       });
     } finally {
@@ -189,6 +213,7 @@ export default function ProfilePage() {
                 </Button>
               </form>
             </TabsContent>
+
             <TabsContent value="security" className="space-y-6">
               <form onSubmit={passwordForm.handleSubmit(onChangePassword)} className="space-y-4">
                 <div className="space-y-2">
