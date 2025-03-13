@@ -24,6 +24,8 @@ import {
 } from "@/components/ui/tabs";
 import { User } from "lucide-react";
 import { AuthorSubscriptions } from "@/components/profile/AuthorSubscriptions";
+import { updateUserProfile, changePassword } from "@/lib/auth";
+import { uploadAvatar } from "@/lib/firebase";
 
 export default function ProfilePage() {
   const [, setLocation] = useLocation();
@@ -53,7 +55,7 @@ export default function ProfilePage() {
   const onUpdateProfile = async (data: UpdateUser) => {
     setSaving(true);
     try {
-      // TODO: Implement profile update logic
+      await updateUserProfile(data.displayName, data.avatarUrl);
       toast({
         title: "Успех",
         description: "Профилът е обновен успешно",
@@ -72,7 +74,7 @@ export default function ProfilePage() {
   const onChangePassword = async (data: ChangePassword) => {
     setSaving(true);
     try {
-      // TODO: Implement password change logic
+      await changePassword(data.currentPassword, data.newPassword);
       toast({
         title: "Успех",
         description: "Паролата е променена успешно",
@@ -95,9 +97,9 @@ export default function ProfilePage() {
 
     setUploading(true);
     try {
-      // TODO: Implement avatar upload logic
-      const avatarUrl = ""; // URL from upload service
+      const avatarUrl = await uploadAvatar(file);
       profileForm.setValue("avatarUrl", avatarUrl);
+      await updateUserProfile(profileForm.getValues("displayName"), avatarUrl);
       toast({
         title: "Успех",
         description: "Снимката е качена успешно",
@@ -129,7 +131,7 @@ export default function ProfilePage() {
             <TabsContent value="profile" className="space-y-6">
               <div className="flex items-center gap-4">
                 <Avatar className="h-20 w-20">
-                  <AvatarImage src={user.avatarUrl} />
+                  <AvatarImage src={user.avatarUrl || undefined} />
                   <AvatarFallback>
                     <User className="h-10 w-10" />
                   </AvatarFallback>
