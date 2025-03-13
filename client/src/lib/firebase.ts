@@ -22,28 +22,21 @@ const provider = new GoogleAuthProvider();
 export const loginWithGoogle = () => signInWithRedirect(auth, provider);
 export const logout = () => signOut(auth);
 
-// Function to upload avatar to Firebase Storage
+// Simple function to upload avatar to Firebase Storage
 export const uploadAvatar = async (file: File): Promise<string> => {
   if (!auth.currentUser) {
     throw new Error("User must be logged in to upload avatar");
   }
 
   try {
-    // Create a unique filename using timestamp
-    const timestamp = Date.now();
-    const filename = `avatars/${auth.currentUser.uid}/${timestamp}-${file.name}`;
+    const filename = `avatars/${auth.currentUser.uid}/${file.name}`;
     const storageRef = ref(storage, filename);
 
-    console.log('Starting file upload to:', filename);
-
-    // Upload the file
+    // Upload file
     await uploadBytes(storageRef, file);
-    console.log('File uploaded successfully to path:', filename);
 
-    // Get the download URL
+    // Get download URL
     const downloadURL = await getDownloadURL(storageRef);
-    console.log('Download URL generated:', downloadURL);
-
     return downloadURL;
   } catch (error) {
     console.error('Error uploading file:', error);

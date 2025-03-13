@@ -6,14 +6,14 @@ import { Input } from "@/components/ui/input";
 import { useForm } from "react-hook-form";
 import { useSelector } from "react-redux";
 import { RootState } from "@/store/store";
-import { UpdateUser, ChangePassword } from "@shared/schema";
+import { UpdateUser } from "@shared/schema";
 import { zodResolver } from "@hookform/resolvers/zod";
-import { updateUserSchema, changePasswordSchema } from "@shared/schema";
+import { updateUserSchema } from "@shared/schema";
 import { useToast } from "@/hooks/use-toast";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { User, Loader2 } from "lucide-react";
 import { AuthorSubscriptions } from "@/components/profile/AuthorSubscriptions";
-import { updateUserProfile, changePassword } from "@/lib/auth";
+import { updateUserProfile } from "@/lib/auth";
 import { uploadAvatar } from "@/lib/firebase";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 
@@ -24,19 +24,13 @@ export default function ProfilePage() {
   const [uploading, setUploading] = useState(false);
   const [saving, setSaving] = useState(false);
   const [activeTab, setActiveTab] = useState("profile");
-  const [avatarError, setAvatarError] = useState(false);
-  const [tempAvatarUrl, setTempAvatarUrl] = useState<string | null>(null);
 
-  const profileForm = useForm<UpdateUser>({
+  const form = useForm<UpdateUser>({
     resolver: zodResolver(updateUserSchema),
     defaultValues: {
       displayName: user?.displayName || "",
       avatarUrl: user?.avatarUrl || "",
     },
-  });
-
-  const passwordForm = useForm<ChangePassword>({
-    resolver: zodResolver(changePasswordSchema),
   });
 
   // Redirect if not logged in
@@ -47,10 +41,7 @@ export default function ProfilePage() {
 
   const handleFileChange = async (e: React.ChangeEvent<HTMLInputElement>) => {
     const file = e.target.files?.[0];
-    if (!file) {
-      console.log('No file selected');
-      return;
-    }
+    if (!file) return;
 
     // Check file size (max 2MB)
     if (file.size > 2 * 1024 * 1024) {
@@ -73,26 +64,24 @@ export default function ProfilePage() {
     }
 
     setUploading(true);
-    setAvatarError(false);
     try {
-      console.log('Starting avatar upload for file:', file.name);
+      // Upload to Firebase Storage
       const avatarUrl = await uploadAvatar(file);
-      console.log('Avatar uploaded successfully:', avatarUrl);
 
-      // Store the URL temporarily - will be saved to database on form submit
-      setTempAvatarUrl(avatarUrl);
-      profileForm.setValue("avatarUrl", avatarUrl);
+      // Update form state
+      form.setValue("avatarUrl", avatarUrl);
+
+      // Update profile immediately
+      await updateUserProfile(form.getValues("displayName"), avatarUrl);
 
       toast({
         title: "Успех",
-        description: "Снимката е качена успешно. Натиснете 'Запази промените' за да съхраните промените.",
+        description: "Снимката е качена успешно",
       });
     } catch (error) {
-      console.error("Avatar upload error:", error);
-      setAvatarError(true);
       toast({
         title: "Грешка",
-        description: "Неуспешно качване на снимката. Моля, опитайте отново.",
+        description: "Неуспешно качване на снимката",
         variant: "destructive",
       });
     } finally {
@@ -101,46 +90,18 @@ export default function ProfilePage() {
     }
   };
 
-  const onUpdateProfile = async (data: UpdateUser) => {
+  const onSubmit = async (data: UpdateUser) => {
     setSaving(true);
     try {
-      // If we have a temp avatar URL, use it in the update
-      const finalAvatarUrl = tempAvatarUrl || data.avatarUrl;
-
-      await updateUserProfile(data.displayName, finalAvatarUrl);
-      setTempAvatarUrl(null); // Clear the temp URL after successful save
-
+      await updateUserProfile(data.displayName, data.avatarUrl);
       toast({
         title: "Успех",
         description: "Профилът е обновен успешно",
       });
     } catch (error) {
-      console.error("Profile update error:", error);
       toast({
         title: "Грешка",
         description: "Неуспешно обновяване на профила",
-        variant: "destructive",
-      });
-    } finally {
-      setSaving(false);
-    }
-  };
-
-  const onChangePassword = async (data: ChangePassword) => {
-    console.log('Changing password');
-    setSaving(true);
-    try {
-      await changePassword(data.currentPassword, data.newPassword);
-      toast({
-        title: "Успех",
-        description: "Паролата е променена успешно",
-      });
-      passwordForm.reset();
-    } catch (error) {
-      console.error("Password change error:", error);
-      toast({
-        title: "Грешка",
-        description: error instanceof Error ? error.message : "Неуспешна промяна на паролата",
         variant: "destructive",
       });
     } finally {
@@ -170,10 +131,7 @@ export default function ProfilePage() {
                     </div>
                   ) : (
                     <>
-                      <AvatarImage
-                        src={profileForm.watch("avatarUrl")}
-                        onError={() => setAvatarError(true)}
-                      />
+                      <AvatarImage src={form.watch("avatarUrl")} />
                       <AvatarFallback>
                         <User className="h-10 w-10" />
                       </AvatarFallback>
@@ -194,16 +152,16 @@ export default function ProfilePage() {
                 </div>
               </div>
 
-              <form onSubmit={profileForm.handleSubmit(onUpdateProfile)} className="space-y-4">
+              <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-4">
                 <div className="space-y-2">
                   <Input
                     placeholder="Име"
-                    {...profileForm.register("displayName")}
-                    disabled={saving || uploading}
+                    {...form.register("displayName")}
+                    disabled={saving}
                   />
-                  {profileForm.formState.errors.displayName && (
+                  {form.formState.errors.displayName && (
                     <p className="text-sm text-destructive">
-                      {profileForm.formState.errors.displayName.message}
+                      {form.formState.errors.displayName.message}
                     </p>
                   )}
                 </div>
@@ -219,7 +177,7 @@ export default function ProfilePage() {
                   </p>
                 </div>
 
-                <Button type="submit" disabled={saving || uploading}>
+                <Button type="submit" disabled={saving}>
                   {saving ? (
                     <>
                       <Loader2 className="mr-2 h-4 w-4 animate-spin" />
@@ -231,7 +189,6 @@ export default function ProfilePage() {
                 </Button>
               </form>
             </TabsContent>
-
             <TabsContent value="security" className="space-y-6">
               <form onSubmit={passwordForm.handleSubmit(onChangePassword)} className="space-y-4">
                 <div className="space-y-2">
