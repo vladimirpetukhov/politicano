@@ -54,7 +54,10 @@ export default function ProfilePage() {
 
   const handleAvatarUpload = async (e: React.ChangeEvent<HTMLInputElement>) => {
     const file = e.target.files?.[0];
-    if (!file) return;
+    if (!file) {
+      console.log('No file selected');
+      return;
+    }
 
     // Check file size (max 2MB)
     if (file.size > 2 * 1024 * 1024) {
@@ -107,6 +110,7 @@ export default function ProfilePage() {
   };
 
   const onUpdateProfile = async (data: UpdateUser) => {
+    console.log('Updating profile with data:', data);
     setSaving(true);
     try {
       await updateUserProfile(data.displayName, data.avatarUrl);
@@ -127,6 +131,7 @@ export default function ProfilePage() {
   };
 
   const onChangePassword = async (data: ChangePassword) => {
+    console.log('Changing password');
     setSaving(true);
     try {
       await changePassword(data.currentPassword, data.newPassword);
@@ -139,7 +144,7 @@ export default function ProfilePage() {
       console.error("Password change error:", error);
       toast({
         title: "Грешка",
-        description: "Неуспешна промяна на паролата",
+        description: error instanceof Error ? error.message : "Неуспешна промяна на паролата",
         variant: "destructive",
       });
     } finally {
