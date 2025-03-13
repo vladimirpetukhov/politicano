@@ -1,6 +1,6 @@
 {
-  "variant": "vibrant",
-  "primary": "hsl(220 90% 56%)",
+  "variant": "professional",
+  "primary": "oklch(70% 0.1 140)",
   "appearance": "light",
   "radius": 0.5
 }
