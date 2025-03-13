@@ -20,25 +20,30 @@ export function AuthorSubscriptions() {
   const [toggleLoading, setToggleLoading] = useState<string | null>(null);
 
   useEffect(() => {
-    // Immediately set authors from mock data
-    const bloggers = mockUsers.filter(user => 
-      user.role === "blogger" || user.role === "admin"
-    );
-    setAuthors(bloggers);
+    const loadData = async () => {
+      // Immediately set authors from mock data
+      const bloggers = mockUsers.filter(user => 
+        user.role === "blogger" || user.role === "admin"
+      );
+      setAuthors(bloggers);
 
-    // Then load subscriptions if user is logged in
-    if (currentUser) {
-      loadSubscriptions();
-    } else {
+      // Then load subscriptions if user is logged in
+      if (currentUser) {
+        await loadSubscriptions();
+      }
       setLoading(false);
-    }
+    };
+
+    loadData();
   }, [currentUser]);
 
   const loadSubscriptions = async () => {
+    if (!currentUser) return;
+
     try {
       const subsQuery = query(
         collection(db, "author_subscriptions"),
-        where("userId", "==", currentUser?.uid)
+        where("userId", "==", currentUser.uid)
       );
       const snapshot = await getDocs(subsQuery);
 
@@ -54,13 +59,11 @@ export function AuthorSubscriptions() {
         description: "Неуспешно зареждане на абонаментите",
         variant: "destructive",
       });
-    } finally {
-      setLoading(false);
     }
   };
 
   const toggleSubscription = async (authorId: string) => {
-    if (!currentUser) return;
+    if (!currentUser || toggleLoading) return;
 
     setToggleLoading(authorId);
     try {
@@ -75,12 +78,12 @@ export function AuthorSubscriptions() {
         );
         const snapshot = await getDocs(subsQuery);
 
-        for (const doc of snapshot.docs) {
-          await deleteDoc(doc.ref);
-        }
+        // Delete all matching subscriptions
+        const deletePromises = snapshot.docs.map(doc => deleteDoc(doc.ref));
+        await Promise.all(deletePromises);
 
         setSubscriptions(prev => {
-          const newSet = new Set(Array.from(prev));
+          const newSet = new Set(prev);
           newSet.delete(authorId);
           return newSet;
         });
@@ -93,7 +96,7 @@ export function AuthorSubscriptions() {
         });
 
         setSubscriptions(prev => {
-          const newSet = new Set(Array.from(prev));
+          const newSet = new Set(prev);
           newSet.add(authorId);
           return newSet;
         });
@@ -101,8 +104,8 @@ export function AuthorSubscriptions() {
 
       toast({
         title: "Успех",
-        description: isCurrentlySubscribed
-          ? "Отписахте се успешно"
+        description: isCurrentlySubscribed 
+          ? "Отписахте се успешно" 
           : "Абонирахте се успешно",
       });
     } catch (error) {
@@ -161,6 +164,7 @@ export function AuthorSubscriptions() {
                   <Switch
                     checked={subscriptions.has(author.uid)}
                     onCheckedChange={() => toggleSubscription(author.uid)}
+                    disabled={toggleLoading !== null}
                   />
                 )}
               </div>

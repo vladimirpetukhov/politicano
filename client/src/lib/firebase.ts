@@ -8,6 +8,7 @@ const firebaseConfig = {
   authDomain: `${import.meta.env.VITE_FIREBASE_PROJECT_ID}.firebaseapp.com`,
   projectId: import.meta.env.VITE_FIREBASE_PROJECT_ID,
   storageBucket: `${import.meta.env.VITE_FIREBASE_PROJECT_ID}.appspot.com`,
+  messagingSenderId: "",
   appId: import.meta.env.VITE_FIREBASE_APP_ID,
 };
 
@@ -28,19 +29,20 @@ export const uploadAvatar = async (file: File): Promise<string> => {
   }
 
   try {
-    // Create a unique filename
-    const filename = `${Date.now()}-${file.name}`;
-    const storageRef = ref(storage, `avatars/${auth.currentUser.uid}/${filename}`);
+    // Create a unique filename using timestamp
+    const timestamp = Date.now();
+    const filename = `avatars/${auth.currentUser.uid}/${timestamp}-${file.name}`;
+    const storageRef = ref(storage, filename);
 
-    console.log('Starting file upload to:', storageRef.fullPath);
+    console.log('Starting file upload to:', filename);
 
     // Upload the file
-    const snapshot = await uploadBytes(storageRef, file);
-    console.log('File uploaded successfully:', snapshot.metadata);
+    await uploadBytes(storageRef, file);
+    console.log('File uploaded successfully to path:', filename);
 
     // Get the download URL
-    const downloadURL = await getDownloadURL(snapshot.ref);
-    console.log('File download URL:', downloadURL);
+    const downloadURL = await getDownloadURL(storageRef);
+    console.log('Download URL generated:', downloadURL);
 
     return downloadURL;
   } catch (error) {

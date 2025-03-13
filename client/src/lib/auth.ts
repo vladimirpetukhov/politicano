@@ -1,5 +1,5 @@
-import { auth } from "./firebase";
-import {
+import { auth, storage } from "./firebase";
+import { 
   signInWithEmailAndPassword,
   createUserWithEmailAndPassword,
   sendEmailVerification,
@@ -7,41 +7,38 @@ import {
   updatePassword,
   reauthenticateWithCredential,
   EmailAuthProvider,
-  updateCurrentUser,
+  updateCurrentUser
 } from "firebase/auth";
 import { store } from "@/store/store";
 import { setUser } from "@/store/slices/authSlice";
 import { User } from "@shared/schema";
 
-// Вход с имейл и парола
+// Login with email and password
 export const loginWithEmail = async (email: string, password: string) => {
   const userCredential = await signInWithEmailAndPassword(auth, email, password);
   const firebaseUser = userCredential.user;
 
-  // Създаваме User обект от Firebase user данните
   const user: User = {
-    id: 0, // Това ще се генерира от базата
+    id: 0,
     uid: firebaseUser.uid,
     email: firebaseUser.email!,
     displayName: firebaseUser.displayName,
     avatarUrl: firebaseUser.photoURL,
-    role: "user", // По подразбиране всички нови потребители са "user"
+    role: "user",
   };
 
   store.dispatch(setUser(user));
 };
 
-// Регистрация с имейл и парола
+// Register with email and password
 export const registerWithEmail = async (email: string, password: string) => {
   const userCredential = await createUserWithEmailAndPassword(auth, email, password);
   const firebaseUser = userCredential.user;
 
-  // Изпращаме имейл за потвърждение
   await sendEmailVerification(firebaseUser);
 
-  // Създаваме User обект от Firebase user данните
   const user: User = {
-    id: 0, // Това ще се генерира от базата
+    id: 0,
     uid: firebaseUser.uid,
     email: firebaseUser.email!,
     displayName: null,
@@ -52,7 +49,7 @@ export const registerWithEmail = async (email: string, password: string) => {
   store.dispatch(setUser(user));
 };
 
-// Изход
+// Logout
 export const logout = async () => {
   await auth.signOut();
   store.dispatch(setUser(null));
@@ -60,7 +57,7 @@ export const logout = async () => {
 
 // Update profile
 export const updateUserProfile = async (displayName: string, photoURL?: string) => {
-  if (!auth.currentUser) throw new Error("Не сте влезли в системата");
+  if (!auth.currentUser) throw new Error("Not logged in");
 
   try {
     console.log('Updating profile:', { displayName, photoURL });
@@ -70,7 +67,7 @@ export const updateUserProfile = async (displayName: string, photoURL?: string) 
       photoURL
     });
 
-    // Force refresh the user to get updated profile
+    // Force refresh to get updated profile
     await updateCurrentUser(auth, auth.currentUser);
 
     console.log('Profile updated successfully');
@@ -95,21 +92,21 @@ export const updateUserProfile = async (displayName: string, photoURL?: string) 
 // Change password
 export const changePassword = async (currentPassword: string, newPassword: string) => {
   if (!auth.currentUser || !auth.currentUser.email) {
-    throw new Error("Не сте влезли в системата");
+    throw new Error("Not logged in");
   }
 
   try {
-    // Първо презаверяваме потребителя
+    // Re-authenticate user first
     const credential = EmailAuthProvider.credential(
       auth.currentUser.email,
       currentPassword
     );
     await reauthenticateWithCredential(auth.currentUser, credential);
 
-    // След това сменяме паролата
+    // Then change password
     await updatePassword(auth.currentUser, newPassword);
   } catch (error) {
     console.error("Password change error:", error);
-    throw new Error("Грешна текуща парола или проблем със смяната на паролата");
+    throw new Error("Wrong current password or password change failed");
   }
 };
