@@ -8,11 +8,11 @@ import { useToast } from "@/hooks/use-toast";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
-import { Textarea } from "@/components/ui/textarea";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useForm } from "react-hook-form";
 import { insertArticleSchema } from "@shared/schema";
 import type { InsertArticle } from "@shared/schema";
+import { RichTextEditor } from "@/components/articles/RichTextEditor";
 
 export default function CreateArticle() {
   const [, setLocation] = useLocation();
@@ -46,14 +46,14 @@ export default function CreateArticle() {
       });
 
       toast({
-        title: "Success",
-        description: "Article published successfully",
+        title: "Успех",
+        description: "Статията е публикувана успешно",
       });
       setLocation("/");
     } catch (error) {
       toast({
-        title: "Error",
-        description: "Failed to publish article",
+        title: "Грешка",
+        description: "Неуспешно публикуване на статията",
         variant: "destructive",
       });
     } finally {
@@ -65,13 +65,13 @@ export default function CreateArticle() {
     <div className="max-w-3xl mx-auto">
       <Card>
         <CardHeader>
-          <CardTitle>Create New Article</CardTitle>
+          <CardTitle>Създай Нова Статия</CardTitle>
         </CardHeader>
         <CardContent>
           <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-6">
             <div className="space-y-2">
               <Input
-                placeholder="Article Title"
+                placeholder="Заглавие на статията"
                 {...form.register("title")}
                 className="text-xl font-semibold"
               />
@@ -83,10 +83,9 @@ export default function CreateArticle() {
             </div>
 
             <div className="space-y-2">
-              <Textarea
-                placeholder="Write your article content here..."
-                {...form.register("content")}
-                className="min-h-[400px]"
+              <RichTextEditor
+                content={form.getValues("content")}
+                onChange={(content) => form.setValue("content", content)}
               />
               {form.formState.errors.content && (
                 <p className="text-sm text-destructive">
@@ -101,10 +100,10 @@ export default function CreateArticle() {
                 variant="outline"
                 onClick={() => setLocation("/")}
               >
-                Cancel
+                Отказ
               </Button>
               <Button type="submit" disabled={submitting}>
-                Publish Article
+                Публикувай
               </Button>
             </div>
           </form>
