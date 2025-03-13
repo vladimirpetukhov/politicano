@@ -56,15 +56,16 @@ export const logout = async () => {
 };
 
 // Update profile
-export const updateUserProfile = async (displayName: string, photoURL?: string) => {
+export const updateUserProfile = async (displayName: string, photoURL?: string | null) => {
   if (!auth.currentUser) throw new Error("Not logged in");
 
   try {
     console.log('Updating profile:', { displayName, photoURL });
 
+    // First update Firebase Auth profile
     await updateProfile(auth.currentUser, {
       displayName,
-      photoURL
+      photoURL: photoURL || null
     });
 
     // Force refresh to get updated profile
@@ -74,13 +75,16 @@ export const updateUserProfile = async (displayName: string, photoURL?: string) 
 
     // Update Redux store
     store.dispatch(setUser({
-      id: 0,
+      id: 0, // This should be fetched from your database
       uid: auth.currentUser.uid,
       email: auth.currentUser.email!,
       displayName: auth.currentUser.displayName,
       avatarUrl: auth.currentUser.photoURL,
-      role: "user", // This should be fetched from your backend
+      role: "user", // This should be fetched from your database
     }));
+
+    // TODO: Add API call to update user info in PostgreSQL database
+    // This will be implemented when we set up the backend routes
 
     return true;
   } catch (error) {

@@ -25,6 +25,7 @@ export default function ProfilePage() {
   const [saving, setSaving] = useState(false);
   const [activeTab, setActiveTab] = useState("profile");
   const [avatarError, setAvatarError] = useState(false);
+  const [tempAvatarUrl, setTempAvatarUrl] = useState<string | null>(null);
 
   const profileForm = useForm<UpdateUser>({
     resolver: zodResolver(updateUserSchema),
@@ -78,17 +79,14 @@ export default function ProfilePage() {
       const avatarUrl = await uploadAvatar(file);
       console.log('Avatar uploaded successfully:', avatarUrl);
 
-      // Set the form value
+      // Store the URL temporarily - will be saved to database on form submit
+      setTempAvatarUrl(avatarUrl);
       profileForm.setValue("avatarUrl", avatarUrl);
 
-      // Update UI
       toast({
         title: "Успех",
-        description: "Снимката е качена успешно",
+        description: "Снимката е качена успешно. Натиснете 'Запази промените' за да съхраните промените.",
       });
-
-      // Immediately update profile with new avatar
-      await updateUserProfile(profileForm.getValues("displayName"), avatarUrl);
     } catch (error) {
       console.error("Avatar upload error:", error);
       setAvatarError(true);
@@ -99,16 +97,19 @@ export default function ProfilePage() {
       });
     } finally {
       setUploading(false);
-      // Reset the input field to allow uploading the same file again
       e.target.value = '';
     }
   };
 
   const onUpdateProfile = async (data: UpdateUser) => {
-    console.log('Updating profile with data:', data);
     setSaving(true);
     try {
-      await updateUserProfile(data.displayName, data.avatarUrl);
+      // If we have a temp avatar URL, use it in the update
+      const finalAvatarUrl = tempAvatarUrl || data.avatarUrl;
+
+      await updateUserProfile(data.displayName, finalAvatarUrl);
+      setTempAvatarUrl(null); // Clear the temp URL after successful save
+
       toast({
         title: "Успех",
         description: "Профилът е обновен успешно",
@@ -169,8 +170,8 @@ export default function ProfilePage() {
                     </div>
                   ) : (
                     <>
-                      <AvatarImage 
-                        src={profileForm.watch("avatarUrl")} 
+                      <AvatarImage
+                        src={profileForm.watch("avatarUrl")}
                         onError={() => setAvatarError(true)}
                       />
                       <AvatarFallback>

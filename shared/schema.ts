@@ -50,7 +50,7 @@ export const insertUserSchema = createInsertSchema(users).pick({
 
 export const updateUserSchema = z.object({
   displayName: z.string().min(2, "Името трябва да е поне 2 символа"),
-  avatarUrl: z.string().url("Невалиден URL адрес").optional(),
+  avatarUrl: z.string().url("Невалиден URL адрес").optional().nullable(),
 });
 
 export const changePasswordSchema = z.object({
