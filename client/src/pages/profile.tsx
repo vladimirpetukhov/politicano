@@ -76,13 +76,17 @@ export default function ProfilePage() {
       const avatarUrl = await uploadAvatar(file);
       console.log('Avatar uploaded successfully:', avatarUrl);
 
-      // Update form value and trigger validation
-      profileForm.setValue("avatarUrl", avatarUrl, { shouldValidate: true });
+      // Set the form value
+      profileForm.setValue("avatarUrl", avatarUrl);
 
+      // Update UI
       toast({
         title: "Успех",
         description: "Снимката е качена успешно",
       });
+
+      // Immediately update profile with new avatar
+      await updateUserProfile(profileForm.getValues("displayName"), avatarUrl);
     } catch (error) {
       console.error("Avatar upload error:", error);
       toast({
@@ -188,7 +192,7 @@ export default function ProfilePage() {
                   <Input
                     placeholder="Име"
                     {...profileForm.register("displayName")}
-                    disabled={saving}
+                    disabled={saving || uploading}
                   />
                   {profileForm.formState.errors.displayName && (
                     <p className="text-sm text-destructive">

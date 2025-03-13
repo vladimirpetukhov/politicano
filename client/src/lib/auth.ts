@@ -75,6 +75,7 @@ export const updateUserProfile = async (displayName: string, photoURL?: string) 
 
     console.log('Profile updated successfully');
 
+    // Update Redux store
     store.dispatch(setUser({
       id: 0,
       uid: auth.currentUser.uid,
