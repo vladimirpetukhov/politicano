@@ -52,6 +52,42 @@ export default function ProfilePage() {
     return null;
   }
 
+  const handleAvatarUpload = async (e: React.ChangeEvent<HTMLInputElement>) => {
+    const file = e.target.files?.[0];
+    if (!file) return;
+
+    // Check file size (max 2MB)
+    if (file.size > 2 * 1024 * 1024) {
+      toast({
+        title: "Грешка",
+        description: "Файлът трябва да е по-малък от 2MB",
+        variant: "destructive",
+      });
+      return;
+    }
+
+    setUploading(true);
+    try {
+      const avatarUrl = await uploadAvatar(file);
+      profileForm.setValue("avatarUrl", avatarUrl);
+      await updateUserProfile(profileForm.getValues("displayName"), avatarUrl);
+
+      toast({
+        title: "Успех",
+        description: "Снимката е качена успешно",
+      });
+    } catch (error) {
+      console.error("Avatar upload error:", error);
+      toast({
+        title: "Грешка",
+        description: "Неуспешно качване на снимката",
+        variant: "destructive",
+      });
+    } finally {
+      setUploading(false);
+    }
+  };
+
   const onUpdateProfile = async (data: UpdateUser) => {
     setSaving(true);
     try {
@@ -61,6 +97,7 @@ export default function ProfilePage() {
         description: "Профилът е обновен успешно",
       });
     } catch (error) {
+      console.error("Profile update error:", error);
       toast({
         title: "Грешка",
         description: "Неуспешно обновяване на профила",
@@ -81,6 +118,7 @@ export default function ProfilePage() {
       });
       passwordForm.reset();
     } catch (error) {
+      console.error("Password change error:", error);
       toast({
         title: "Грешка",
         description: "Неуспешна промяна на паролата",
@@ -88,30 +126,6 @@ export default function ProfilePage() {
       });
     } finally {
       setSaving(false);
-    }
-  };
-
-  const handleAvatarUpload = async (e: React.ChangeEvent<HTMLInputElement>) => {
-    const file = e.target.files?.[0];
-    if (!file) return;
-
-    setUploading(true);
-    try {
-      const avatarUrl = await uploadAvatar(file);
-      profileForm.setValue("avatarUrl", avatarUrl);
-      await updateUserProfile(profileForm.getValues("displayName"), avatarUrl);
-      toast({
-        title: "Успех",
-        description: "Снимката е качена успешно",
-      });
-    } catch (error) {
-      toast({
-        title: "Грешка",
-        description: "Неуспешно качване на снимката",
-        variant: "destructive",
-      });
-    } finally {
-      setUploading(false);
     }
   };
 
@@ -155,6 +169,7 @@ export default function ProfilePage() {
                   <Input
                     placeholder="Име"
                     {...profileForm.register("displayName")}
+                    disabled={saving}
                   />
                   {profileForm.formState.errors.displayName && (
                     <p className="text-sm text-destructive">
@@ -187,6 +202,7 @@ export default function ProfilePage() {
                     type="password"
                     placeholder="Текуща парола"
                     {...passwordForm.register("currentPassword")}
+                    disabled={saving}
                   />
                   {passwordForm.formState.errors.currentPassword && (
                     <p className="text-sm text-destructive">
@@ -200,6 +216,7 @@ export default function ProfilePage() {
                     type="password"
                     placeholder="Нова парола"
                     {...passwordForm.register("newPassword")}
+                    disabled={saving}
                   />
                   {passwordForm.formState.errors.newPassword && (
                     <p className="text-sm text-destructive">
@@ -213,6 +230,7 @@ export default function ProfilePage() {
                     type="password"
                     placeholder="Повтори новата парола"
                     {...passwordForm.register("confirmPassword")}
+                    disabled={saving}
                   />
                   {passwordForm.formState.errors.confirmPassword && (
                     <p className="text-sm text-destructive">

@@ -8,12 +8,15 @@ import { Avatar, AvatarFallback } from "@/components/ui/avatar";
 import { Switch } from "@/components/ui/switch";
 import { User as UserIcon } from "lucide-react";
 import { useToast } from "@/hooks/use-toast";
+import { collection, addDoc, query, where, getDocs, deleteDoc, doc } from "firebase/firestore";
+import { db } from "@/lib/firebase";
 
 export function AuthorSubscriptions() {
   const currentUser = useSelector((state: RootState) => state.auth.user);
   const [authors, setAuthors] = useState<User[]>([]);
   const [subscriptions, setSubscriptions] = useState<Set<string>>(new Set());
   const { toast } = useToast();
+  const [loading, setLoading] = useState(true);
 
   useEffect(() => {
     // В реална среда ще зареждаме от базата данни
@@ -21,14 +24,54 @@ export function AuthorSubscriptions() {
       user.role === "blogger" || user.role === "admin"
     );
     setAuthors(bloggers);
+    loadSubscriptions();
   }, []);
 
-  const toggleSubscription = async (authorId: string) => {
+  const loadSubscriptions = async () => {
+    if (!currentUser) return;
+
     try {
-      // TODO: Implement subscription toggle logic
+      const subsQuery = query(
+        collection(db, "author_subscriptions"),
+        where("userId", "==", currentUser.uid)
+      );
+      const snapshot = await getDocs(subsQuery);
+      const subs = new Set<string>();
+      snapshot.forEach(doc => {
+        subs.add(doc.data().authorId);
+      });
+      setSubscriptions(subs);
+    } catch (error) {
+      console.error("Error loading subscriptions:", error);
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  const toggleSubscription = async (authorId: string) => {
+    if (!currentUser) return;
+
+    try {
+      const subsQuery = query(
+        collection(db, "author_subscriptions"),
+        where("userId", "==", currentUser.uid),
+        where("authorId", "==", authorId)
+      );
+      const snapshot = await getDocs(subsQuery);
+
       if (subscriptions.has(authorId)) {
+        // Unsubscribe
+        snapshot.forEach(async (doc) => {
+          await deleteDoc(doc.ref);
+        });
         subscriptions.delete(authorId);
       } else {
+        // Subscribe
+        await addDoc(collection(db, "author_subscriptions"), {
+          userId: currentUser.uid,
+          authorId: authorId,
+          createdAt: new Date().toISOString()
+        });
         subscriptions.add(authorId);
       }
       setSubscriptions(new Set(subscriptions));
@@ -40,6 +83,7 @@ export function AuthorSubscriptions() {
           : "Отписахте се успешно",
       });
     } catch (error) {
+      console.error("Error toggling subscription:", error);
       toast({
         title: "Грешка",
         description: "Възникна грешка при промяна на абонамента",
@@ -47,6 +91,10 @@ export function AuthorSubscriptions() {
       });
     }
   };
+
+  if (loading) {
+    return <div>Loading...</div>;
+  }
 
   return (
     <Card>

@@ -6,7 +6,8 @@ import {
   updateProfile,
   updatePassword,
   reauthenticateWithCredential,
-  EmailAuthProvider
+  EmailAuthProvider,
+  updateCurrentUser,
 } from "firebase/auth";
 import { store } from "@/store/store";
 import { setUser } from "@/store/slices/authSlice";
@@ -66,6 +67,9 @@ export const updateUserProfile = async (displayName: string, photoURL?: string) 
     photoURL
   });
 
+  // Force refresh the user to get updated profile
+  await updateCurrentUser(auth, auth.currentUser);
+
   store.dispatch(setUser({
     id: 0,
     uid: auth.currentUser.uid,
@@ -82,13 +86,18 @@ export const changePassword = async (currentPassword: string, newPassword: strin
     throw new Error("Не сте влезли в системата");
   }
 
-  // Първо презаверяваме потребителя
-  const credential = EmailAuthProvider.credential(
-    auth.currentUser.email,
-    currentPassword
-  );
-  await reauthenticateWithCredential(auth.currentUser, credential);
+  try {
+    // Първо презаверяваме потребителя
+    const credential = EmailAuthProvider.credential(
+      auth.currentUser.email,
+      currentPassword
+    );
+    await reauthenticateWithCredential(auth.currentUser, credential);
 
-  // След това сменяме паролата
-  await updatePassword(auth.currentUser, newPassword);
+    // След това сменяме паролата
+    await updatePassword(auth.currentUser, newPassword);
+  } catch (error) {
+    console.error("Password change error:", error);
+    throw new Error("Грешна текуща парола или проблем със смяната на паролата");
+  }
 };
