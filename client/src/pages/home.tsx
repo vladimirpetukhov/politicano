@@ -9,19 +9,39 @@ export default function Home() {
   const dispatch = useDispatch();
 
   useEffect(() => {
-    // Симулираме зареждане на статии
     dispatch(setLoading(true));
+    // Симулираме зареждане на статии
     setTimeout(() => {
       dispatch(setArticles(mockArticles));
       dispatch(setLoading(false));
-    }, 500); // Добавяме малко закъснение за по-реалистично усещане
+    }, 500);
   }, [dispatch]);
 
+  // Сортираме статиите по различни критерии
+  const recentArticles = [...mockArticles].sort((a, b) => 
+    b.publishDate.getTime() - a.publishDate.getTime()
+  ).slice(0, 12);
+
+  const mostLikedArticles = [...mockArticles].sort((a, b) => b.likes - a.likes).slice(0, 5);
+  const mostViewedArticles = [...mockArticles].sort((a, b) => b.views - a.views).slice(0, 5);
+
   return (
-    <div>
-      <h1 className="text-4xl font-bold mb-8">Последни статии</h1>
-      <ArticleFilters />
-      <ArticleGrid />
+    <div className="space-y-12">
+      <section>
+        <h2 className="text-3xl font-bold mb-6">Последни Публикации</h2>
+        <ArticleFilters />
+        <ArticleGrid articles={recentArticles} />
+      </section>
+
+      <section>
+        <h2 className="text-3xl font-bold mb-6">Най-Харесвани Статии</h2>
+        <ArticleGrid articles={mostLikedArticles} />
+      </section>
+
+      <section>
+        <h2 className="text-3xl font-bold mb-6">Най-Четени Статии</h2>
+        <ArticleGrid articles={mostViewedArticles} />
+      </section>
     </div>
   );
 }
