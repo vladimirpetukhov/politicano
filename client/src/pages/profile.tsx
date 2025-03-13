@@ -1,6 +1,5 @@
 import { useState } from "react";
 import { useLocation } from "wouter";
-import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
 import { useSelector } from "react-redux";
@@ -11,7 +10,7 @@ import { uploadAvatar } from "@/lib/firebase";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { updateUserProfile } from "@/lib/auth";
 
-export default function ProfilePage() {
+export default function Profile() {
   const [, setLocation] = useLocation();
   const user = useSelector((state: RootState) => state.auth.user);
   const { toast } = useToast();
@@ -27,21 +26,20 @@ export default function ProfilePage() {
     const file = e.target.files?.[0];
     if (!file) return;
 
-    // Check file size (max 2MB)
+    // Basic file validation
     if (file.size > 2 * 1024 * 1024) {
       toast({
-        title: "Грешка",
-        description: "Файлът трябва да е по-малък от 2MB",
+        title: "Error",
+        description: "File size must be less than 2MB",
         variant: "destructive",
       });
       return;
     }
 
-    // Check file type
     if (!file.type.startsWith('image/')) {
       toast({
-        title: "Грешка",
-        description: "Моля, изберете изображение",
+        title: "Error",
+        description: "Please select an image file",
         variant: "destructive",
       });
       return;
@@ -49,38 +47,41 @@ export default function ProfilePage() {
 
     setUploading(true);
     try {
-      // Upload to Firebase Storage and get URL
-      const avatarUrl = await uploadAvatar(file);
-      console.log("Avatar URL:", avatarUrl);
+      console.log("Starting upload for file:", file.name);
 
-      // Update Firebase user profile
-      await updateUserProfile(user.displayName || "", avatarUrl);
+      // Upload to Firebase Storage
+      const downloadURL = await uploadAvatar(file);
+      console.log("Upload successful, URL:", downloadURL);
+
+      // Update user profile
+      await updateUserProfile(user.displayName || "", downloadURL);
+      console.log("Profile updated with new avatar");
 
       toast({
-        title: "Успех",
-        description: "Снимката е качена успешно",
+        title: "Success",
+        description: "Profile picture updated successfully",
       });
     } catch (error) {
-      console.error("Upload error:", error);
+      console.error("Upload failed:", error);
       toast({
-        title: "Грешка",
-        description: "Неуспешно качване на снимката",
+        title: "Error",
+        description: "Failed to upload profile picture",
         variant: "destructive",
       });
     } finally {
       setUploading(false);
-      e.target.value = '';
+      e.target.value = ''; // Reset input
     }
   };
 
   return (
-    <div className="max-w-2xl mx-auto p-4">
+    <div className="container max-w-2xl mx-auto p-4">
       <Card>
         <CardHeader>
-          <CardTitle>Моят профил</CardTitle>
+          <CardTitle>My Profile</CardTitle>
         </CardHeader>
         <CardContent>
-          <div className="flex flex-col items-center gap-4">
+          <div className="flex flex-col items-center gap-6">
             <Avatar className="h-32 w-32">
               {uploading ? (
                 <div className="h-full w-full flex items-center justify-center bg-muted">
@@ -105,24 +106,22 @@ export default function ProfilePage() {
                 className="mb-2"
               />
               <p className="text-sm text-muted-foreground text-center">
-                Максимален размер: 2MB
+                Maximum file size: 2MB
               </p>
             </div>
 
-            <div className="w-full max-w-sm mt-4">
-              <div className="space-y-2">
-                <Input
-                  type="email"
-                  value={user.email}
-                  disabled
-                  className="text-center"
-                />
-                <p className="text-sm text-muted-foreground text-center">
-                  {user.role === "admin" ? "Администратор" : 
-                   user.role === "blogger" ? "Блогър" : 
-                   "Потребител"}
-                </p>
-              </div>
+            <div className="w-full max-w-sm">
+              <Input
+                type="email"
+                value={user.email}
+                disabled
+                className="text-center"
+              />
+              <p className="text-sm text-muted-foreground text-center mt-2">
+                {user.role === "admin" ? "Administrator" : 
+                 user.role === "blogger" ? "Blogger" : 
+                 "User"}
+              </p>
             </div>
           </div>
         </CardContent>
