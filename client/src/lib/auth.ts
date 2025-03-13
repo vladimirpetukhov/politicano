@@ -1,59 +1,54 @@
-import { mockUsers } from "./mockData";
+import { auth } from "./firebase";
+import { 
+  signInWithEmailAndPassword,
+  createUserWithEmailAndPassword,
+  sendEmailVerification
+} from "firebase/auth";
 import { store } from "@/store/store";
 import { setUser } from "@/store/slices/authSlice";
+import { User } from "@shared/schema";
 
-// Моркнати credentials за тестване
-const TEST_CREDENTIALS = {
-  admin: { email: "admin@politicalblog.com", password: "admin123" },
-  blogger: { email: "blogger@politicalblog.com", password: "blog123" },
-  user: { email: "user@politicalblog.com", password: "user123" },
-};
+// Вход с имейл и парола
+export const loginWithEmail = async (email: string, password: string) => {
+  const userCredential = await signInWithEmailAndPassword(auth, email, password);
+  const firebaseUser = userCredential.user;
 
-// Симулира login с credentials или социален вход
-export const mockLogin = (email?: string, password?: string) => {
-  let user;
-
-  if (email && password) {
-    // Проверка на credentials
-    if (email === TEST_CREDENTIALS.admin.email && password === TEST_CREDENTIALS.admin.password) {
-      user = mockUsers.find(u => u.role === "admin");
-    } else if (email === TEST_CREDENTIALS.blogger.email && password === TEST_CREDENTIALS.blogger.password) {
-      user = mockUsers.find(u => u.role === "blogger");
-    } else if (email === TEST_CREDENTIALS.user.email && password === TEST_CREDENTIALS.user.password) {
-      user = mockUsers.find(u => u.role === "user");
-    }
-  } else {
-    // Ако няма credentials, значи е социален вход (винаги връща regular user)
-    user = mockUsers.find(u => u.role === "user");
-  }
-
-  if (user) {
-    store.dispatch(setUser(user));
-  }
-};
-
-// Симулира регистрация
-export const mockRegister = (email: string, password: string) => {
-  // Проверка дали потребителя вече съществува
-  const existingUser = mockUsers.find(u => u.email === email);
-  if (existingUser) {
-    throw new Error("Този имейл вече е регистриран");
-  }
-
-  // Създаване на нов потребител
-  const newUser = {
-    id: mockUsers.length + 1,
-    uid: `mock-${mockUsers.length + 1}`,
-    email,
-    role: "user" as const,
+  // Създаваме User обект от Firebase user данните
+  const user: User = {
+    id: 0, // Това ще се генерира от базата
+    uid: firebaseUser.uid,
+    email: firebaseUser.email!,
+    displayName: firebaseUser.displayName,
+    avatarUrl: firebaseUser.photoURL,
+    role: "user", // По подразбиране всички нови потребители са "user"
   };
 
-  // В реална среда тук ще се запазва в базата
-  mockUsers.push(newUser);
-  store.dispatch(setUser(newUser));
+  store.dispatch(setUser(user));
 };
 
-// Симулира logout
-export const mockLogout = () => {
+// Регистрация с имейл и парола
+export const registerWithEmail = async (email: string, password: string) => {
+  const userCredential = await createUserWithEmailAndPassword(auth, email, password);
+  const firebaseUser = userCredential.user;
+
+  // Изпращаме имейл за потвърждение
+  await sendEmailVerification(firebaseUser);
+
+  // Създаваме User обект от Firebase user данните
+  const user: User = {
+    id: 0, // Това ще се генерира от базата
+    uid: firebaseUser.uid,
+    email: firebaseUser.email!,
+    displayName: null,
+    avatarUrl: null,
+    role: "user",
+  };
+
+  store.dispatch(setUser(user));
+};
+
+// Изход
+export const logout = async () => {
+  await auth.signOut();
   store.dispatch(setUser(null));
 };

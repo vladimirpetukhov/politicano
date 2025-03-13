@@ -2,7 +2,7 @@ import { Link } from "wouter";
 import { Button } from "@/components/ui/button";
 import { useSelector } from "react-redux";
 import { RootState } from "@/store/store";
-import { mockLogout } from "@/lib/auth";
+import { logout } from "@/lib/auth";
 import { UserCircle } from "lucide-react";
 
 export function Navbar() {
@@ -11,11 +11,13 @@ export function Navbar() {
   return (
     <nav className="border-b">
       <div className="container mx-auto px-4 py-3 flex items-center justify-between">
-        <Link href="/">
-          <Button variant="link" className="text-2xl font-bold p-0">
-            Политически Блог
-          </Button>
-        </Link>
+        <div>
+          <Link href="/">
+            <Button variant="link" className="text-2xl font-bold p-0">
+              Политически Блог
+            </Button>
+          </Link>
+        </div>
         <div className="flex items-center gap-4">
           {user ? (
             <>
@@ -30,7 +32,7 @@ export function Navbar() {
                   Профил
                 </Button>
               </Link>
-              <Button variant="ghost" onClick={mockLogout}>
+              <Button variant="ghost" onClick={logout}>
                 Изход
               </Button>
             </>

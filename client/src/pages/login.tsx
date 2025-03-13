@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import { useState } from "react";
 import { useLocation } from "wouter";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
@@ -6,7 +6,8 @@ import { Input } from "@/components/ui/input";
 import { useForm } from "react-hook-form";
 import { useSelector } from "react-redux";
 import { RootState } from "@/store/store";
-import { mockLogin, mockRegister } from "@/lib/auth";
+import { loginWithEmail, registerWithEmail } from "@/lib/auth";
+import { loginWithGoogle } from "@/lib/firebase";
 import { SiGoogle, SiFacebook } from "react-icons/si";
 import { Separator } from "@/components/ui/separator";
 import { zodResolver } from "@hookform/resolvers/zod";
@@ -41,6 +42,7 @@ export default function Login() {
   const user = useSelector((state: RootState) => state.auth.user);
   const { toast } = useToast();
   const [activeTab, setActiveTab] = useState<string>("login");
+  const [loading, setLoading] = useState(false);
 
   const loginForm = useForm<LoginForm>({
     resolver: zodResolver(loginSchema),
@@ -50,27 +52,35 @@ export default function Login() {
     resolver: zodResolver(registerSchema),
   });
 
-  useEffect(() => {
-    if (user) {
-      setLocation("/");
-    }
-  }, [user, setLocation]);
+  // Redirect if already logged in
+  if (user) {
+    setLocation("/");
+    return null;
+  }
 
-  const onLogin = (data: LoginForm) => {
+  const onLogin = async (data: LoginForm) => {
+    setLoading(true);
     try {
-      mockLogin(data.email, data.password);
+      await loginWithEmail(data.email, data.password);
+      toast({
+        title: "Успех",
+        description: "Влязохте успешно в системата",
+      });
     } catch (error) {
       toast({
         title: "Грешка",
         description: "Невалиден имейл или парола",
         variant: "destructive",
       });
+    } finally {
+      setLoading(false);
     }
   };
 
-  const onRegister = (data: RegisterForm) => {
+  const onRegister = async (data: RegisterForm) => {
+    setLoading(true);
     try {
-      mockRegister(data.email, data.password);
+      await registerWithEmail(data.email, data.password);
       toast({
         title: "Успех",
         description: "Изпратихме Ви имейл за потвърждение на регистрацията",
@@ -81,11 +91,9 @@ export default function Login() {
         description: error instanceof Error ? error.message : "Възникна грешка при регистрацията",
         variant: "destructive",
       });
+    } finally {
+      setLoading(false);
     }
-  };
-
-  const handleSocialLogin = () => {
-    mockLogin(); // За тестови цели връща regular user
   };
 
   return (
@@ -108,6 +116,7 @@ export default function Login() {
                     type="email"
                     placeholder="Имейл адрес"
                     {...loginForm.register("email")}
+                    disabled={loading}
                   />
                   {loginForm.formState.errors.email && (
                     <p className="text-sm text-destructive">
@@ -121,6 +130,7 @@ export default function Login() {
                     type="password"
                     placeholder="Парола"
                     {...loginForm.register("password")}
+                    disabled={loading}
                   />
                   {loginForm.formState.errors.password && (
                     <p className="text-sm text-destructive">
@@ -129,7 +139,7 @@ export default function Login() {
                   )}
                 </div>
 
-                <Button type="submit" className="w-full">
+                <Button type="submit" className="w-full" disabled={loading}>
                   Вход
                 </Button>
               </form>
@@ -142,6 +152,7 @@ export default function Login() {
                     type="email"
                     placeholder="Имейл адрес"
                     {...registerForm.register("email")}
+                    disabled={loading}
                   />
                   {registerForm.formState.errors.email && (
                     <p className="text-sm text-destructive">
@@ -155,6 +166,7 @@ export default function Login() {
                     type="password"
                     placeholder="Парола"
                     {...registerForm.register("password")}
+                    disabled={loading}
                   />
                   {registerForm.formState.errors.password && (
                     <p className="text-sm text-destructive">
@@ -168,6 +180,7 @@ export default function Login() {
                     type="password"
                     placeholder="Повтори паролата"
                     {...registerForm.register("confirmPassword")}
+                    disabled={loading}
                   />
                   {registerForm.formState.errors.confirmPassword && (
                     <p className="text-sm text-destructive">
@@ -176,7 +189,7 @@ export default function Login() {
                   )}
                 </div>
 
-                <Button type="submit" className="w-full">
+                <Button type="submit" className="w-full" disabled={loading}>
                   Регистрация
                 </Button>
               </form>
@@ -197,16 +210,18 @@ export default function Login() {
           <div className="space-y-2">
             <Button 
               className="w-full flex items-center justify-center gap-2" 
-              onClick={handleSocialLogin}
+              onClick={loginWithGoogle}
               variant="outline"
+              disabled={loading}
             >
               <SiGoogle className="h-5 w-5" />
               Влез с Google
             </Button>
             <Button 
               className="w-full flex items-center justify-center gap-2" 
-              onClick={handleSocialLogin}
+              onClick={loginWithGoogle}
               variant="outline"
+              disabled={loading}
             >
               <SiFacebook className="h-5 w-5" />
               Влез с Facebook
