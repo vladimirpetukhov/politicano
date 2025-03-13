@@ -32,6 +32,27 @@ export const mockLogin = (username?: string, password?: string) => {
   }
 };
 
+// Симулира регистрация
+export const mockRegister = (username: string, password: string) => {
+  // Проверка дали потребителя вече съществува
+  const existingUser = mockUsers.find(u => u.username === username);
+  if (existingUser) {
+    throw new Error("Потребителското име вече съществува");
+  }
+
+  // Създаване на нов потребител
+  const newUser = {
+    id: mockUsers.length + 1,
+    uid: `mock-${mockUsers.length + 1}`,
+    username,
+    role: "user" as const,
+  };
+
+  // В реална среда тук ще се запазва в базата
+  mockUsers.push(newUser);
+  store.dispatch(setUser(newUser));
+};
+
 // Симулира logout
 export const mockLogout = () => {
   store.dispatch(setUser(null));
