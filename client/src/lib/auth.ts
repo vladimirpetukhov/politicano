@@ -1,5 +1,5 @@
 import { auth } from "./firebase";
-import { 
+import {
   signInWithEmailAndPassword,
   createUserWithEmailAndPassword,
   sendEmailVerification,
@@ -62,22 +62,33 @@ export const logout = async () => {
 export const updateUserProfile = async (displayName: string, photoURL?: string) => {
   if (!auth.currentUser) throw new Error("Не сте влезли в системата");
 
-  await updateProfile(auth.currentUser, {
-    displayName,
-    photoURL
-  });
+  try {
+    console.log('Updating profile:', { displayName, photoURL });
 
-  // Force refresh the user to get updated profile
-  await updateCurrentUser(auth, auth.currentUser);
+    await updateProfile(auth.currentUser, {
+      displayName,
+      photoURL
+    });
 
-  store.dispatch(setUser({
-    id: 0,
-    uid: auth.currentUser.uid,
-    email: auth.currentUser.email!,
-    displayName: auth.currentUser.displayName,
-    avatarUrl: auth.currentUser.photoURL,
-    role: "user", // This should be fetched from your backend
-  }));
+    // Force refresh the user to get updated profile
+    await updateCurrentUser(auth, auth.currentUser);
+
+    console.log('Profile updated successfully');
+
+    store.dispatch(setUser({
+      id: 0,
+      uid: auth.currentUser.uid,
+      email: auth.currentUser.email!,
+      displayName: auth.currentUser.displayName,
+      avatarUrl: auth.currentUser.photoURL,
+      role: "user", // This should be fetched from your backend
+    }));
+
+    return true;
+  } catch (error) {
+    console.error('Error updating profile:', error);
+    throw error;
+  }
 };
 
 // Change password
