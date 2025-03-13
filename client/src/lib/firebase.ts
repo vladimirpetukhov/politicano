@@ -23,7 +23,28 @@ export const logout = () => signOut(auth);
 
 // Function to upload avatar to Firebase Storage
 export const uploadAvatar = async (file: File): Promise<string> => {
-  const storageRef = ref(storage, `avatars/${auth.currentUser?.uid}/${file.name}`);
-  await uploadBytes(storageRef, file);
-  return await getDownloadURL(storageRef);
+  if (!auth.currentUser) {
+    throw new Error("User must be logged in to upload avatar");
+  }
+
+  try {
+    // Create a unique filename
+    const filename = `${Date.now()}-${file.name}`;
+    const storageRef = ref(storage, `avatars/${auth.currentUser.uid}/${filename}`);
+
+    console.log('Starting file upload to:', storageRef.fullPath);
+
+    // Upload the file
+    const snapshot = await uploadBytes(storageRef, file);
+    console.log('File uploaded successfully:', snapshot.metadata);
+
+    // Get the download URL
+    const downloadURL = await getDownloadURL(snapshot.ref);
+    console.log('File download URL:', downloadURL);
+
+    return downloadURL;
+  } catch (error) {
+    console.error('Error uploading file:', error);
+    throw new Error("Failed to upload avatar");
+  }
 };

@@ -66,11 +66,27 @@ export default function ProfilePage() {
       return;
     }
 
+    // Check file type
+    if (!file.type.startsWith('image/')) {
+      toast({
+        title: "Грешка",
+        description: "Моля, изберете изображение",
+        variant: "destructive",
+      });
+      return;
+    }
+
     setUploading(true);
     try {
+      console.log('Starting avatar upload for file:', file.name);
       const avatarUrl = await uploadAvatar(file);
-      profileForm.setValue("avatarUrl", avatarUrl);
+      console.log('Avatar uploaded successfully:', avatarUrl);
+
       await updateUserProfile(profileForm.getValues("displayName"), avatarUrl);
+      console.log('Profile updated with new avatar');
+
+      // Update form value
+      profileForm.setValue("avatarUrl", avatarUrl);
 
       toast({
         title: "Успех",
@@ -80,11 +96,13 @@ export default function ProfilePage() {
       console.error("Avatar upload error:", error);
       toast({
         title: "Грешка",
-        description: "Неуспешно качване на снимката",
+        description: "Неуспешно качване на снимката. Моля, опитайте отново.",
         variant: "destructive",
       });
     } finally {
       setUploading(false);
+      // Reset the input field to allow uploading the same file again
+      e.target.value = '';
     }
   };
 
