@@ -3,6 +3,7 @@ import { Button } from "@/components/ui/button";
 import { useSelector } from "react-redux";
 import { RootState } from "@/store/store";
 import { mockLogout } from "@/lib/auth";
+import { UserCircle } from "lucide-react";
 
 export function Navbar() {
   const user = useSelector((state: RootState) => state.auth.user);
@@ -21,6 +22,12 @@ export function Navbar() {
                   <Button variant="outline">Напиши статия</Button>
                 </Link>
               )}
+              <Link href="/profile">
+                <Button variant="ghost" className="gap-2">
+                  <UserCircle className="h-5 w-5" />
+                  Профил
+                </Button>
+              </Link>
               <Button variant="ghost" onClick={mockLogout}>
                 Изход
               </Button>

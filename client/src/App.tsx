@@ -7,6 +7,9 @@ import { Layout } from "./components/layout/Layout";
 
 import Home from "./pages/home";
 import Login from "./pages/login";
+import Profile from "./pages/profile";
+import Article from "./pages/article";
+import CreateArticle from "./pages/create-article";
 import NotFound from "./pages/not-found";
 
 function App() {
@@ -17,6 +20,9 @@ function App() {
           <Switch>
             <Route path="/" component={Home} />
             <Route path="/login" component={Login} />
+            <Route path="/profile" component={Profile} />
+            <Route path="/article/:id" component={Article} />
+            <Route path="/create-article" component={CreateArticle} />
             <Route component={NotFound} />
           </Switch>
         </Layout>
