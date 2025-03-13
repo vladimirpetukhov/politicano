@@ -1,31 +1,21 @@
 import { useState } from "react";
-import { useSelector } from "react-redux";
 import { useLocation } from "wouter";
+import { Button } from "@/components/ui/button";
+import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+import { Input } from "@/components/ui/input";
+import { useForm } from "react-hook-form";
+import { useSelector } from "react-redux";
 import { RootState } from "@/store/store";
 import { UpdateUser, ChangePassword } from "@shared/schema";
-import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { updateUserSchema, changePasswordSchema } from "@shared/schema";
 import { useToast } from "@/hooks/use-toast";
-import {
-  Card,
-  CardContent,
-  CardHeader,
-  CardTitle,
-} from "@/components/ui/card";
-import { Input } from "@/components/ui/input";
-import { Button } from "@/components/ui/button";
-import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
-import {
-  Tabs,
-  TabsContent,
-  TabsList,
-  TabsTrigger,
-} from "@/components/ui/tabs";
+import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { User } from "lucide-react";
 import { AuthorSubscriptions } from "@/components/profile/AuthorSubscriptions";
 import { updateUserProfile, changePassword } from "@/lib/auth";
 import { uploadAvatar } from "@/lib/firebase";
+import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 
 export default function ProfilePage() {
   const [, setLocation] = useLocation();
@@ -33,6 +23,7 @@ export default function ProfilePage() {
   const { toast } = useToast();
   const [uploading, setUploading] = useState(false);
   const [saving, setSaving] = useState(false);
+  const [activeTab, setActiveTab] = useState("profile");
 
   const profileForm = useForm<UpdateUser>({
     resolver: zodResolver(updateUserSchema),
@@ -159,7 +150,7 @@ export default function ProfilePage() {
           <CardTitle>Профил</CardTitle>
         </CardHeader>
         <CardContent>
-          <Tabs defaultValue="profile">
+          <Tabs value={activeTab} onValueChange={setActiveTab}>
             <TabsList className="grid w-full grid-cols-2">
               <TabsTrigger value="profile">Профил</TabsTrigger>
               <TabsTrigger value="security">Сигурност</TabsTrigger>
@@ -168,7 +159,7 @@ export default function ProfilePage() {
             <TabsContent value="profile" className="space-y-6">
               <div className="flex items-center gap-4">
                 <Avatar className="h-20 w-20">
-                  <AvatarImage src={user.avatarUrl || undefined} />
+                  <AvatarImage src={profileForm.watch("avatarUrl")} />
                   <AvatarFallback>
                     <User className="h-10 w-10" />
                   </AvatarFallback>
