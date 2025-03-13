@@ -43,7 +43,7 @@ export default function ProfilePage() {
     return null;
   }
 
-  const handleAvatarUpload = async (e: React.ChangeEvent<HTMLInputElement>) => {
+  const handleFileChange = async (e: React.ChangeEvent<HTMLInputElement>) => {
     const file = e.target.files?.[0];
     if (!file) {
       console.log('No file selected');
@@ -168,7 +168,7 @@ export default function ProfilePage() {
                   <Input
                     type="file"
                     accept="image/*"
-                    onChange={handleAvatarUpload}
+                    onChange={handleFileChange}
                     disabled={uploading}
                     className="mb-2"
                   />
