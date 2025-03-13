@@ -18,28 +18,26 @@ export const db = getFirestore(app);
 export const storage = getStorage(app);
 
 const provider = new GoogleAuthProvider();
-
 export const loginWithGoogle = () => signInWithRedirect(auth, provider);
 export const logout = () => signOut(auth);
 
-// Simple function to upload avatar to Firebase Storage
 export const uploadAvatar = async (file: File): Promise<string> => {
   if (!auth.currentUser) {
-    throw new Error("User must be logged in to upload avatar");
+    throw new Error("Трябва да сте влезли в системата");
   }
 
   try {
-    const filename = `avatars/${auth.currentUser.uid}/${file.name}`;
-    const storageRef = ref(storage, filename);
+    // Simple path: avatars/userId/filename
+    const path = `avatars/${auth.currentUser.uid}/${file.name}`;
+    const storageRef = ref(storage, path);
 
     // Upload file
     await uploadBytes(storageRef, file);
 
-    // Get download URL
-    const downloadURL = await getDownloadURL(storageRef);
-    return downloadURL;
+    // Get and return download URL
+    return await getDownloadURL(storageRef);
   } catch (error) {
-    console.error('Error uploading file:', error);
-    throw new Error("Failed to upload avatar");
+    console.error("Error uploading avatar:", error);
+    throw new Error("Грешка при качване на снимката");
   }
 };
