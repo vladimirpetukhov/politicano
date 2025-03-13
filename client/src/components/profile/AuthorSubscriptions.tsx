@@ -64,19 +64,21 @@ export function AuthorSubscriptions() {
 
     setToggleLoading(authorId);
     try {
-      const subsQuery = query(
-        collection(db, "author_subscriptions"),
-        where("userId", "==", currentUser.uid),
-        where("authorId", "==", authorId)
-      );
-      const snapshot = await getDocs(subsQuery);
       const isCurrentlySubscribed = subscriptions.has(authorId);
 
       if (isCurrentlySubscribed) {
         // Unsubscribe
+        const subsQuery = query(
+          collection(db, "author_subscriptions"),
+          where("userId", "==", currentUser.uid),
+          where("authorId", "==", authorId)
+        );
+        const snapshot = await getDocs(subsQuery);
+
         for (const doc of snapshot.docs) {
           await deleteDoc(doc.ref);
         }
+
         setSubscriptions(prev => {
           const newSet = new Set(Array.from(prev));
           newSet.delete(authorId);
@@ -89,6 +91,7 @@ export function AuthorSubscriptions() {
           authorId: authorId,
           createdAt: new Date().toISOString()
         });
+
         setSubscriptions(prev => {
           const newSet = new Set(Array.from(prev));
           newSet.add(authorId);

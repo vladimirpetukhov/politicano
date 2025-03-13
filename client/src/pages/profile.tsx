@@ -24,6 +24,7 @@ export default function ProfilePage() {
   const [uploading, setUploading] = useState(false);
   const [saving, setSaving] = useState(false);
   const [activeTab, setActiveTab] = useState("profile");
+  const [avatarError, setAvatarError] = useState(false);
 
   const profileForm = useForm<UpdateUser>({
     resolver: zodResolver(updateUserSchema),
@@ -71,6 +72,7 @@ export default function ProfilePage() {
     }
 
     setUploading(true);
+    setAvatarError(false);
     try {
       console.log('Starting avatar upload for file:', file.name);
       const avatarUrl = await uploadAvatar(file);
@@ -89,6 +91,7 @@ export default function ProfilePage() {
       await updateUserProfile(profileForm.getValues("displayName"), avatarUrl);
     } catch (error) {
       console.error("Avatar upload error:", error);
+      setAvatarError(true);
       toast({
         title: "Грешка",
         description: "Неуспешно качване на снимката. Моля, опитайте отново.",
@@ -166,7 +169,10 @@ export default function ProfilePage() {
                     </div>
                   ) : (
                     <>
-                      <AvatarImage src={profileForm.watch("avatarUrl")} />
+                      <AvatarImage 
+                        src={profileForm.watch("avatarUrl")} 
+                        onError={() => setAvatarError(true)}
+                      />
                       <AvatarFallback>
                         <User className="h-10 w-10" />
                       </AvatarFallback>
