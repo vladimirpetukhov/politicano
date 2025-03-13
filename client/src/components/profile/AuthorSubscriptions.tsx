@@ -6,9 +6,9 @@ import { mockUsers } from "@/lib/mockData";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Avatar, AvatarFallback } from "@/components/ui/avatar";
 import { Switch } from "@/components/ui/switch";
-import { User as UserIcon } from "lucide-react";
+import { User as UserIcon, Loader2 } from "lucide-react";
 import { useToast } from "@/hooks/use-toast";
-import { collection, addDoc, query, where, getDocs, deleteDoc, doc } from "firebase/firestore";
+import { collection, addDoc, query, where, getDocs, deleteDoc } from "firebase/firestore";
 import { db } from "@/lib/firebase";
 
 export function AuthorSubscriptions() {
@@ -17,23 +17,28 @@ export function AuthorSubscriptions() {
   const [subscriptions, setSubscriptions] = useState<Set<string>>(new Set());
   const { toast } = useToast();
   const [loading, setLoading] = useState(true);
+  const [toggleLoading, setToggleLoading] = useState<string | null>(null);
 
   useEffect(() => {
-    // В реална среда ще зареждаме от базата данни
+    // Immediately set authors from mock data
     const bloggers = mockUsers.filter(user => 
       user.role === "blogger" || user.role === "admin"
     );
     setAuthors(bloggers);
-    loadSubscriptions();
-  }, []);
+
+    // Then load subscriptions if user is logged in
+    if (currentUser) {
+      loadSubscriptions();
+    } else {
+      setLoading(false);
+    }
+  }, [currentUser]);
 
   const loadSubscriptions = async () => {
-    if (!currentUser) return;
-
     try {
       const subsQuery = query(
         collection(db, "author_subscriptions"),
-        where("userId", "==", currentUser.uid)
+        where("userId", "==", currentUser?.uid)
       );
       const snapshot = await getDocs(subsQuery);
       const subs = new Set<string>();
@@ -43,6 +48,11 @@ export function AuthorSubscriptions() {
       setSubscriptions(subs);
     } catch (error) {
       console.error("Error loading subscriptions:", error);
+      toast({
+        title: "Грешка",
+        description: "Неуспешно зареждане на абонаментите",
+        variant: "destructive",
+      });
     } finally {
       setLoading(false);
     }
@@ -51,6 +61,7 @@ export function AuthorSubscriptions() {
   const toggleSubscription = async (authorId: string) => {
     if (!currentUser) return;
 
+    setToggleLoading(authorId);
     try {
       const subsQuery = query(
         collection(db, "author_subscriptions"),
@@ -61,10 +72,15 @@ export function AuthorSubscriptions() {
 
       if (subscriptions.has(authorId)) {
         // Unsubscribe
-        snapshot.forEach(async (doc) => {
+        const doc = snapshot.docs[0];
+        if (doc) {
           await deleteDoc(doc.ref);
-        });
-        subscriptions.delete(authorId);
+          setSubscriptions(prev => {
+            const newSet = new Set(prev);
+            newSet.delete(authorId);
+            return newSet;
+          });
+        }
       } else {
         // Subscribe
         await addDoc(collection(db, "author_subscriptions"), {
@@ -72,15 +88,18 @@ export function AuthorSubscriptions() {
           authorId: authorId,
           createdAt: new Date().toISOString()
         });
-        subscriptions.add(authorId);
+        setSubscriptions(prev => {
+          const newSet = new Set(prev);
+          newSet.add(authorId);
+          return newSet;
+        });
       }
-      setSubscriptions(new Set(subscriptions));
 
       toast({
         title: "Успех",
         description: subscriptions.has(authorId) 
-          ? "Абонирахте се успешно" 
-          : "Отписахте се успешно",
+          ? "Отписахте се успешно" 
+          : "Абонирахте се успешно",
       });
     } catch (error) {
       console.error("Error toggling subscription:", error);
@@ -89,11 +108,24 @@ export function AuthorSubscriptions() {
         description: "Възникна грешка при промяна на абонамента",
         variant: "destructive",
       });
+    } finally {
+      setToggleLoading(null);
     }
   };
 
   if (loading) {
-    return <div>Loading...</div>;
+    return (
+      <Card>
+        <CardHeader>
+          <CardTitle>Абонаменти за автори</CardTitle>
+        </CardHeader>
+        <CardContent>
+          <div className="flex justify-center py-8">
+            <Loader2 className="h-8 w-8 animate-spin text-muted-foreground" />
+          </div>
+        </CardContent>
+      </Card>
+    );
   }
 
   return (
@@ -118,10 +150,16 @@ export function AuthorSubscriptions() {
                   </p>
                 </div>
               </div>
-              <Switch
-                checked={subscriptions.has(author.uid)}
-                onCheckedChange={() => toggleSubscription(author.uid)}
-              />
+              <div className="flex items-center gap-2">
+                {toggleLoading === author.uid ? (
+                  <Loader2 className="h-4 w-4 animate-spin" />
+                ) : (
+                  <Switch
+                    checked={subscriptions.has(author.uid)}
+                    onCheckedChange={() => toggleSubscription(author.uid)}
+                  />
+                )}
+              </div>
             </div>
           ))}
 
