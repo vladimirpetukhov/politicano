@@ -17,7 +17,7 @@ export function ArticleFilters() {
       setFilters({
         author: author || null,
         dateRange: {
-          start: date || null,
+          start: date ? date.toISOString() : null,
           end: null,
         },
       })

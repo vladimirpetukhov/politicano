@@ -12,16 +12,16 @@ export default function Home() {
 
   useEffect(() => {
     dispatch(setLoading(true));
-    // Симулираме зареждане на статии
+    // Load articles
     setTimeout(() => {
       dispatch(setArticles(mockArticles));
       dispatch(setLoading(false));
     }, 500);
   }, [dispatch]);
 
-  // Сортираме статиите по различни критерии
+  // Sort articles by date using ISO strings
   const recentArticles = [...mockArticles].sort((a, b) =>
-    b.publishDate.getTime() - a.publishDate.getTime()
+    new Date(b.publishDate).getTime() - new Date(a.publishDate).getTime()
   ).slice(0, 12);
 
   const mostLikedArticles = [...mockArticles].sort((a, b) => b.likes - a.likes).slice(0, 5);

@@ -1,0 +1,72 @@
+[vite] connecting...
+[vite] connected.
+Warning: validateDOMNesting(...): <a> cannot appear as a descendant of &lt;a&gt;.
+    at a
+    at a
+    at https://e10cbf68-87b5-446d-8946-8916c92804db-00-18tl9g5ptj9ye.picard.replit.dev/@fs/home/runner/workspace/node_modules/.vite/deps/wouter.js?v=54756d4e:279:18
+    at div
+    at nav
+    at Navbar (https://e10cbf68-87b5-446d-8946-8916c92804db-00-18tl9g5ptj9ye.picard.replit.dev/src/components/layout/Navbar.tsx:25:16)
+    at div
+    at Layout (https://e10cbf68-87b5-446d-8946-8916c92804db-00-18tl9g5ptj9ye.picard.replit.dev/src/components/layout/Layout.tsx:19:26)
+    at QueryClientProvider (https://e10cbf68-87b5-446d-8946-8916c92804db-00-18tl9g5ptj9ye.picard.replit.dev/@fs/home/runner/workspace/node_modules/.vite/deps/@tanstack_react-query.js?v=54756d4e:2805:3)
+    at Provider (https://e10cbf68-87b5-446d-8946-8916c92804db-00-18tl9g5ptj9ye.picard.replit.dev/@fs/home/runner/workspace/node_modules/.vite/deps/react-redux.js?v=54756d4e:923:11)
+    at App
+A non-serializable value was detected in an action, in the path: &#x60;payload.0.publishDate&#x60;. Value: 
+Date {}
+ 
+Take a look at the logic that dispatched this action:  
+Object {type: "articles/setArticles", payload: Array(3)}
+ 
+(See https://redux.js.org/faq/actions#why-should-type-be-a-string-or-at-least-serializable-why-should-my-action-types-be-constants) 
+(To allow non-serializable values see: https://redux-toolkit.js.org/usage/usage-guide#working-with-non-serializable-data)
+Take a look at the logic that dispatched this action: <div class="luna-console-preview" data-id="33"><div class="luna-console-preview-container"><div class="luna-console-preview-icon-container"><span class="luna-console-icon luna-console-icon-caret-right"></span></div><span class="luna-console-preview-content-container"><span class="luna-console-descriptor">Object</span> <span class="luna-console-object-preview">{<span class="luna-console-key">type</span>: <span class="luna-console-string">&quot;articles/setArticles&quot;</span>, <span class="luna-console-key">payload</span>: Array(3)}</span></span></div><div class="luna-console-json luna-console-hidden"></div></div>
+(See https://redux.js.org/faq/actions#why-should-type-be-a-string-or-at-least-serializable-why-should-my-action-types-be-constants)
+(To allow non-serializable values see: https://redux-toolkit.js.org/usage/usage-guide#working-with-non-serializable-data)
+at t.value (https://e10cbf68-87b5-446d-8946-8916c92804db-00-18tl9g5ptj9ye.picard.replit.dev/__replco/static/devtools/eruda/3.2.3/eruda.js:2:17465)
+at new t (https://e10cbf68-87b5-446d-8946-8916c92804db-00-18tl9g5ptj9ye.picard.replit.dev/__replco/static/devtools/eruda/3.2.3/eruda.js:2:12630)
+at t.value (https://e10cbf68-87b5-446d-8946-8916c92804db-00-18tl9g5ptj9ye.picard.replit.dev/__replco/static/devtools/eruda/3.2.3/eruda.js:2:32766)
+at https://e10cbf68-87b5-446d-8946-8916c92804db-00-18tl9g5ptj9ye.picard.replit.dev/__replco/static/devtools/eruda/3.2.3/eruda.js:2:34400
+A non-serializable value was detected in the state, in the path: &#x60;articles.articles.0.publishDate&#x60;. Value: 
+Date {}
+ 
+Take a look at the reducer(s) handling this action type: articles/setArticles.
+(See https://redux.js.org/faq/organizing-state#can-i-put-functions-promises-or-other-non-serializable-items-in-my-store-state)
+A non-serializable value was detected in the state, in the path: &#x60;articles.articles.0.publishDate&#x60;. Value: 
+Date {}
+ 
+Take a look at the reducer(s) handling this action type: articles/setLoading.
+(See https://redux.js.org/faq/organizing-state#can-i-put-functions-promises-or-other-non-serializable-items-in-my-store-state)
+A non-serializable value was detected in the state, in the path: &#x60;articles.articles.0.publishDate&#x60;. Value: 
+Date {}
+ 
+Take a look at the reducer(s) handling this action type: auth/setUser.
+(See https://redux.js.org/faq/organizing-state#can-i-put-functions-promises-or-other-non-serializable-items-in-my-store-state)
+A non-serializable value was detected in the state, in the path: &#x60;articles.articles.0.publishDate&#x60;. Value: 
+Date {}
+ 
+Take a look at the reducer(s) handling this action type: articles/setLoading.
+(See https://redux.js.org/faq/organizing-state#can-i-put-functions-promises-or-other-non-serializable-items-in-my-store-state)
+A non-serializable value was detected in an action, in the path: &#x60;payload.0.publishDate&#x60;. Value: 
+Date {}
+ 
+Take a look at the logic that dispatched this action:  
+Object {type: "articles/setArticles", payload: Array(3)}
+ 
+(See https://redux.js.org/faq/actions#why-should-type-be-a-string-or-at-least-serializable-why-should-my-action-types-be-constants) 
+(To allow non-serializable values see: https://redux-toolkit.js.org/usage/usage-guide#working-with-non-serializable-data)
+A non-serializable value was detected in the state, in the path: &#x60;articles.articles.0.publishDate&#x60;. Value: 
+Date {}
+ 
+Take a look at the reducer(s) handling this action type: articles/setArticles.
+(See https://redux.js.org/faq/organizing-state#can-i-put-functions-promises-or-other-non-serializable-items-in-my-store-state)
+A non-serializable value was detected in the state, in the path: &#x60;articles.articles.0.publishDate&#x60;. Value: 
+Date {}
+ 
+Take a look at the reducer(s) handling this action type: articles/setLoading.
+(See https://redux.js.org/faq/organizing-state#can-i-put-functions-promises-or-other-non-serializable-items-in-my-store-state)
+A non-serializable value was detected in the state, in the path: &#x60;articles.articles.0.publishDate&#x60;. Value: 
+Date {}
+ 
+Take a look at the reducer(s) handling this action type: auth/setUser.
+(See https://redux.js.org/faq/organizing-state#can-i-put-functions-promises-or-other-non-serializable-items-in-my-store-state)

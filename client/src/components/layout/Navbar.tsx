@@ -12,7 +12,9 @@ export function Navbar() {
     <nav className="border-b">
       <div className="container mx-auto px-4 py-3 flex items-center justify-between">
         <Link href="/">
-          <a className="text-2xl font-bold">Политически Блог</a>
+          <Button variant="link" className="text-2xl font-bold p-0">
+            Политически Блог
+          </Button>
         </Link>
         <div className="flex items-center gap-4">
           {user ? (
