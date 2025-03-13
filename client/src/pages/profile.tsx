@@ -11,7 +11,7 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import { updateUserSchema, changePasswordSchema } from "@shared/schema";
 import { useToast } from "@/hooks/use-toast";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
-import { User } from "lucide-react";
+import { User, Loader2 } from "lucide-react";
 import { AuthorSubscriptions } from "@/components/profile/AuthorSubscriptions";
 import { updateUserProfile, changePassword } from "@/lib/auth";
 import { uploadAvatar } from "@/lib/firebase";
@@ -76,11 +76,8 @@ export default function ProfilePage() {
       const avatarUrl = await uploadAvatar(file);
       console.log('Avatar uploaded successfully:', avatarUrl);
 
-      await updateUserProfile(profileForm.getValues("displayName"), avatarUrl);
-      console.log('Profile updated with new avatar');
-
-      // Update form value
-      profileForm.setValue("avatarUrl", avatarUrl);
+      // Update form value and trigger validation
+      profileForm.setValue("avatarUrl", avatarUrl, { shouldValidate: true });
 
       toast({
         title: "Успех",
@@ -159,10 +156,18 @@ export default function ProfilePage() {
             <TabsContent value="profile" className="space-y-6">
               <div className="flex items-center gap-4">
                 <Avatar className="h-20 w-20">
-                  <AvatarImage src={profileForm.watch("avatarUrl")} />
-                  <AvatarFallback>
-                    <User className="h-10 w-10" />
-                  </AvatarFallback>
+                  {uploading ? (
+                    <div className="h-full w-full flex items-center justify-center bg-muted">
+                      <Loader2 className="h-8 w-8 animate-spin" />
+                    </div>
+                  ) : (
+                    <>
+                      <AvatarImage src={profileForm.watch("avatarUrl")} />
+                      <AvatarFallback>
+                        <User className="h-10 w-10" />
+                      </AvatarFallback>
+                    </>
+                  )}
                 </Avatar>
                 <div>
                   <Input
@@ -203,8 +208,15 @@ export default function ProfilePage() {
                   </p>
                 </div>
 
-                <Button type="submit" disabled={saving}>
-                  Запази промените
+                <Button type="submit" disabled={saving || uploading}>
+                  {saving ? (
+                    <>
+                      <Loader2 className="mr-2 h-4 w-4 animate-spin" />
+                      Запазване...
+                    </>
+                  ) : (
+                    "Запази промените"
+                  )}
                 </Button>
               </form>
             </TabsContent>
@@ -254,7 +266,14 @@ export default function ProfilePage() {
                 </div>
 
                 <Button type="submit" disabled={saving}>
-                  Промени паролата
+                  {saving ? (
+                    <>
+                      <Loader2 className="mr-2 h-4 w-4 animate-spin" />
+                      Запазване...
+                    </>
+                  ) : (
+                    "Промени паролата"
+                  )}
                 </Button>
               </form>
             </TabsContent>

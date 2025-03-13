@@ -41,6 +41,7 @@ export function AuthorSubscriptions() {
         where("userId", "==", currentUser?.uid)
       );
       const snapshot = await getDocs(subsQuery);
+
       const subs = new Set<string>();
       snapshot.forEach(doc => {
         subs.add(doc.data().authorId);
@@ -69,18 +70,18 @@ export function AuthorSubscriptions() {
         where("authorId", "==", authorId)
       );
       const snapshot = await getDocs(subsQuery);
+      const isCurrentlySubscribed = subscriptions.has(authorId);
 
-      if (subscriptions.has(authorId)) {
+      if (isCurrentlySubscribed) {
         // Unsubscribe
-        const doc = snapshot.docs[0];
-        if (doc) {
+        for (const doc of snapshot.docs) {
           await deleteDoc(doc.ref);
-          setSubscriptions(prev => {
-            const newSet = new Set(prev);
-            newSet.delete(authorId);
-            return newSet;
-          });
         }
+        setSubscriptions(prev => {
+          const newSet = new Set(Array.from(prev));
+          newSet.delete(authorId);
+          return newSet;
+        });
       } else {
         // Subscribe
         await addDoc(collection(db, "author_subscriptions"), {
@@ -89,7 +90,7 @@ export function AuthorSubscriptions() {
           createdAt: new Date().toISOString()
         });
         setSubscriptions(prev => {
-          const newSet = new Set(prev);
+          const newSet = new Set(Array.from(prev));
           newSet.add(authorId);
           return newSet;
         });
@@ -97,8 +98,8 @@ export function AuthorSubscriptions() {
 
       toast({
         title: "Успех",
-        description: subscriptions.has(authorId) 
-          ? "Отписахте се успешно" 
+        description: isCurrentlySubscribed
+          ? "Отписахте се успешно"
           : "Абонирахте се успешно",
       });
     } catch (error) {
